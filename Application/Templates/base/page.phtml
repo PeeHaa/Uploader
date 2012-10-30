@@ -1,0 +1,51 @@
+<?php
+if (!isset($_SESSION['username'])) {
+    $content = require 'intro.phtml';
+} else {
+    $content = require 'upload.phtml';
+}
+?>
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href='http://fonts.googleapis.com/css?family=Oleo+Script:700' rel='stylesheet' type='text/css'>
+    <link href="/style/style.css" rel="stylesheet" type="text/css">
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" href="apple-touch-iphone.png">
+    <script>
+      if (window!=top){top.location.href=location.href;}
+      document.createElement('header');
+      document.createElement('nav');
+      document.createElement('section');
+      document.createElement('article');
+      document.createElement('aside');
+      document.createElement('footer');
+      document.createElement('time');
+    </script>
+  </head>
+  <body>
+    <header>
+      <div id="header">
+        <h1>File<span>Upload</span></h1>
+        <ul>
+          <li><a href="/login-popup" class="btn btn-info btn-large login"><i class="icon-white icon-user"></i> Login</a></li>
+        </ul>
+      </header>
+    </header>
+    <div id="body">
+      <?php echo $content; ?>
+      <footer>
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Terms of service</a></li>
+          <li>Copyright © 2012 <a href="http://www.pieterhordijk.com" target="_blank">Pieter Hordijk</a></li>
+        </ul>
+      </footer>
+    </div>
+    <script src="/js/XMLHttpRequest.js"></script>
+    <script src="/js/fileuploader.js"></script>
+    <script src="/js/site.js"></script>
+</body>
+</html>
