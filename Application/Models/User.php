@@ -48,7 +48,7 @@ class User
     }
 
     /**
-     * Validates the user supplied credentials
+     * Validates the user supplied credentials. If the login is successful it will handle the session regeneration.
      *
      * @param string $username The username to check
      * @param string $password The password to check
@@ -110,12 +110,10 @@ class User
     private function resetUserSession(array $userData)
     {
         $this->session->regenerate();
-        $this->session->set([
-            'user' => [
-                'userid'   => $userData['userid'],
-                'username' => $userData['username'],
-                'email'    => $userData['email'],
-            ],
+        $this->session->set('user', [
+            'userid'   => $userData['userid'],
+            'username' => $userData['username'],
+            'email'    => $userData['email'],
         ]);
     }
 }
