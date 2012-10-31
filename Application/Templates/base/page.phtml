@@ -1,8 +1,10 @@
 <?php
-if (!isset($_SESSION['username'])) {
-    $content = require 'intro.phtml';
-} else {
+if ($this->templateVariables['isUserLoggedIn']) {
     $content = require 'upload.phtml';
+    $header  = require dirname(__DIR__) . '../header/logged-in.phtml';
+} else {
+    $content = require 'intro.phtml';
+    $header  = require dirname(__DIR__) . '../header/not-logged-in.phtml';
 }
 ?>
 
@@ -29,9 +31,7 @@ if (!isset($_SESSION['username'])) {
     <header>
       <div id="header">
         <h1>File<span>Upload</span></h1>
-        <ul>
-          <li><a href="/login-popup" class="btn btn-info btn-large login"><i class="icon-white icon-user"></i> Login</a></li>
-        </ul>
+        <?php echo $header; ?>
       </header>
     </header>
     <div id="body">

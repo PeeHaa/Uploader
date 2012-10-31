@@ -116,4 +116,18 @@ class User
             'email'    => $userData['email'],
         ]);
     }
+
+    /**
+     * Checks whether the current user is logged in
+     *
+     * @return boolean Whether the user is logged in
+     */
+    public function isLoggedIn()
+    {
+        if ($this->session->isKeyValid('user')) {
+            return true;
+        }
+
+        return false;
+    }
 }

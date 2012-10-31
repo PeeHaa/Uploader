@@ -71,7 +71,8 @@ switch (true) {
         break;
 
     default:
-        $view       = new \Application\Views\Frontpage\Index();
+        $model      = new \Application\Models\User($dbConnection, $session);
+        $view       = new \Application\Views\Frontpage\Index($model);
         $controller = new \Application\Controllers\Index();
         $response   = $controller->frontpage($view);
         break;

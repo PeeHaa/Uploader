@@ -14,7 +14,8 @@
  */
 namespace Application\Views\Frontpage;
 
-use Application\Views\BaseView;
+use Application\Views\BaseView,
+    Application\Models\User;
 
 /**
  * Frontpage view
@@ -27,6 +28,21 @@ use Application\Views\BaseView;
 class Index extends BaseView
 {
     /**
+     * @var \Application\Models\User The user model
+     */
+    private $userModel;
+
+    /**
+     * Creates instance
+     *
+     * @param \Application\Models\User $userModel The user model
+     */
+    public function __construct(\Application\Models\User $userModel)
+    {
+        $this->userModel = $userModel;
+    }
+
+    /**
      * Renders the template
      *
      * @return string The rendered HTML
@@ -34,5 +50,13 @@ class Index extends BaseView
     public function render()
     {
         return $this->renderTemplate('base/page.phtml');
+    }
+
+    /**
+     * Sets the template variables
+     */
+    protected function setTemplateVariables()
+    {
+        $this->templateVariables['isUserLoggedIn'] = $this->userModel->isLoggedIn();
     }
 }
