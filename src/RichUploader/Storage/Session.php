@@ -45,10 +45,26 @@ class Session
      */
     public function get($key)
     {
-        if (!array_key_exists($key, $_SESSION)) {
+        if (!$this->isKeyValid($key)) {
             throw new \OutOfBoundsException('Key (`' . $key . '`) not found in session.');
         }
 
         return $_SESSION[$key];
+    }
+
+    /**
+     * Check whether the supplied key is valid (i.e. does exist in the session superglobal)
+     *
+     * @param string $key The key to check
+     *
+     * @return boolean Whether the supplied key is valid
+     */
+    public function isKeyValid($key)
+    {
+        if (array_key_exists($key, $_SESSION)) {
+            return true;
+        }
+
+        return false;
     }
 }
