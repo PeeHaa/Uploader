@@ -13,7 +13,8 @@
  */
 namespace Application\Models;
 
-use RichUploader\Security\CsrfToken;
+use RichUploader\Security\CsrfToken,
+    RichUploader\Storage\Session;
 
 /**
  * Part of the model layer that takes care of the user information
@@ -30,13 +31,20 @@ class User
     private $dbConnection;
 
     /**
+     * @var \RichUploader\Storage\Session The session
+     */
+    private $session;
+
+    /**
      * Creates instance
      *
-     * @param \PDO $dbConnection The database connection
+     * @param \PDO                          $dbConnection The database connection
+     * @param \RichUploader\Storage\Session $session      The session
      */
-    public function __construct(\PDO $dbConnection)
+    public function __construct(\PDO $dbConnection, Session $session)
     {
         $this->dbConnection = $dbConnection;
+        $this->session      = $session;
     }
 
     /**
@@ -49,7 +57,9 @@ class User
      */
     public function login($username, $password, CsrfToken $csrfToken)
     {
-        $stmt = $this->dbConnection->prepare('SELECT userid, hash FROM users WHERE lower(username) = :username');
+        $stmt = $this->dbConnection->prepare(
+            'SELECT userid, username, email, hash FROM users WHERE lower(username) = :username'
+        );
         $stmt->execute([
             'username' => strtolower($username),
         ]);
@@ -60,6 +70,9 @@ class User
         }
 
         $this->reHashWhenNeeded($recordset['userid'], $password, $recordset['hash']);
+
+        $this->resetUserSession($recordset);
+
         $csrfToken->regenerateToken();
 
         return true;
@@ -87,5 +100,22 @@ class User
                 'userid' => $userId,
             ]);
         }
+    }
+
+    /**
+     * Reset the session superglobal and initializes the session with the userdata
+     *
+     * @param array $userData The user data to add to the fresh session
+     */
+    private function resetUserSession(array $userData)
+    {
+        $this->session->regenerate();
+        $this->session->set([
+            'user' => [
+                'userid'   => $userData['userid'],
+                'username' => $userData['username'],
+                'email'    => $userData['email'],
+            ],
+        ]);
     }
 }
