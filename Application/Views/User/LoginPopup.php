@@ -14,7 +14,8 @@
  */
 namespace Application\Views\User;
 
-use Application\Views\BaseView;
+use Application\Views\BaseView,
+    RichUploader\Security\CsrfToken;
 
 /**
  * Login popup view
@@ -27,6 +28,21 @@ use Application\Views\BaseView;
 class LoginPopup extends BaseView
 {
     /**
+     * @var \RichUploader\Security\CsrfToken The CSRF token
+     */
+    private $csrfToken;
+
+    /**
+     * Creates instance
+     *
+     * @param \RichUploader\Security\CsrfToken   $csrfToken    The CSRF token
+     */
+    public function __construct(CsrfToken $csrfToken)
+    {
+        $this->csrfToken = $csrfToken;
+    }
+
+    /**
      * Renders the template
      *
      * @return string The rendered HTML
@@ -34,5 +50,13 @@ class LoginPopup extends BaseView
     public function render()
     {
         return $this->renderTemplate('user/login-popup.phtml');
+    }
+
+    /**
+     * Sets the template variables
+     */
+    protected function setTemplateVariables()
+    {
+        $this->templateVariables['csrfToken'] = $this->csrfToken->getToken();
     }
 }
