@@ -56,6 +56,11 @@ class CsrfToken
         return $csrfToken;
     }
 
+    public function validate($token)
+    {
+        return $token == $this->getToken();
+    }
+
     /**
      * Regenerates a new token
      */
@@ -71,10 +76,10 @@ class CsrfToken
      *
      * @return string The generated CSRF token
      */
-    private function generateToken($length = 128)
+    private function generateToken($rawLength = 128)
     {
         $buffer = '';
-        $raw_length = (int) ($length * 3 / 4 + 1);
+        $raw_length = (int) ($rawLength * 3 / 4 + 1);
         $buffer_valid = false;
         if (function_exists('mcrypt_create_iv')) {
             $buffer = mcrypt_create_iv($raw_length, MCRYPT_DEV_URANDOM);
@@ -112,6 +117,6 @@ class CsrfToken
                 }
             }
         }
-        return str_replace('+', '.', base64_encode($buffer));
+        return str_replace(array('+', '"', '\'', '\\', '/', '=', '?', '&'), '', base64_encode($buffer));
     }
 }
