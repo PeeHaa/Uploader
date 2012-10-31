@@ -16,7 +16,7 @@ namespace RichUploader\Core;
 /**
  * PSR-0 Autoloader
  *
- * @category   Yadeo
+ * @category   RichUploader
  * @package    Core
  * @author     Pieter Hordijk <info@pieterhordijk.com>
  */
