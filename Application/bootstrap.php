@@ -57,7 +57,7 @@ switch (true) {
         break;
 
     case preg_match('/^(\/?login\/?)$/', $_SERVER['REQUEST_URI']):
-        $model      = new \Application\Models\User($dbConnection);
+        $model      = new \Application\Models\User($dbConnection, $session);
         $view       = new \Application\Views\User\Login($model, $csrfToken);
         $controller = new \Application\Controllers\User();
         $response   = $controller->login($view, $_POST);
