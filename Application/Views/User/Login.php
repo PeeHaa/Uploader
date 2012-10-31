@@ -15,7 +15,8 @@
 namespace Application\Views\User;
 
 use Application\Views\BaseView,
-    Application\Models\User;
+    Application\Models\User,
+    RichUploader\Security\CsrfToken;
 
 /**
  * Login view
@@ -33,9 +34,19 @@ class Login extends BaseView
     private $userModel;
 
     /**
+     * @var \RichUploader\Security\CsrfToken The CSRF token
+     */
+    private $csrfToken;
+
+    /**
      * @var string The supplied username
      */
     private $username;
+
+    /**
+     * @var string The supplied CSRF token
+     */
+    private $token;
 
     /**
      * @var string The supplied password
@@ -46,10 +57,12 @@ class Login extends BaseView
      * Creates instance
      *
      * @param \Application\Models\User $userModel The user model
+     * @param \RichUploader\Security\CsrfToken   $csrfToken    The CSRF token
      */
-    public function __construct(User $userModel)
+    public function __construct(User $userModel, CsrfToken $csrfToken)
     {
         $this->userModel = $userModel;
+        $this->csrfToken = $csrfToken;
     }
 
     /**
@@ -73,6 +86,16 @@ class Login extends BaseView
     }
 
     /**
+     * Sets the supplied CSRF token
+     *
+     * @param string $token The supplied CSRF token
+     */
+    public function setToken($token)
+    {
+        $this->token = $token;
+    }
+
+    /**
      * Renders the template
      *
      * @return string The rendered HTML
@@ -87,6 +110,7 @@ class Login extends BaseView
      */
     protected function setTemplateVariables()
     {
-        $this->templateVariables['result'] = $this->userModel->login($this->username, $this->password);
+        $this->templateVariables['result'] = ($this->csrfToken->validate($this->token)
+            && $this->userModel->login($this->username, $this->password, $this->csrfToken));
     }
 }

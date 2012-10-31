@@ -13,7 +13,14 @@
 namespace Application;
 
 use RichUploader\Core\Autoloader,
-    RichUploader\Upload\Uploader;
+    RichUploader\Upload\Uploader,
+    RichUploader\Security\CsrfToken,
+    RichUploader\Security\CsrfToken\StorageMedium\Session;
+
+/**
+ * start the session
+ */
+session_start();
 
 /**
  * set up the limits for the upload process
@@ -33,21 +40,25 @@ $autoloader = new AutoLoader(__NAMESPACE__, dirname(__DIR__));
 $autoloader->register();
 
 /**
+ * setup the CSRF token
+ */
+$csrfToken = new CsrfToken(new Session('csrf_token'));
+
+/**
  * setup the router
  */
 switch (true) {
     case preg_match('/^(\/?login-popup\/?)$/', $_SERVER['REQUEST_URI']):
-        $view       = new \Application\Views\User\LoginPopup();
+        $view       = new \Application\Views\User\LoginPopup($csrfToken);
         $controller = new \Application\Controllers\User();
         $response   = $controller->loginPopup($view);
         break;
 
     case preg_match('/^(\/?login\/?)$/', $_SERVER['REQUEST_URI']):
-        $controller = new \Application\Controllers\User();
         $model      = new \Application\Models\User($dbConnection);
-        $view       = new \Application\Views\User\Login($model);
-
-        $response = $controller->login($view, $_POST);
+        $view       = new \Application\Views\User\Login($model, $csrfToken);
+        $controller = new \Application\Controllers\User();
+        $response   = $controller->login($view, $_POST);
         break;
 
     case preg_match('/^(\/?upload\/)/', $_SERVER['REQUEST_URI']):

@@ -28,7 +28,7 @@ class User
     /**
      * Sets up the login popup view
      *
-     * @param \Application\Views\User\LoginPopup $view    The login popup view
+     * @param \Application\Views\User\LoginPopup $view         The login popup view
      *
      * @return string The rendered view
      */
@@ -53,6 +53,10 @@ class User
 
         if (array_key_exists('password', $request)) {
             $view->setPassword($request['password']);
+        }
+
+        if (array_key_exists('csrf-token', $request)) {
+            $view->setToken($request['csrf-token']);
         }
 
         return $view;

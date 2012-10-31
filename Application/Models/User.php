@@ -13,6 +13,8 @@
  */
 namespace Application\Models;
 
+use RichUploader\Security\CsrfToken;
+
 /**
  * Part of the model layer that takes care of the user information
  *
@@ -45,7 +47,7 @@ class User
      *
      * @return boolean Whether the login was successful
      */
-    public function login($username, $password)
+    public function login($username, $password, CsrfToken $csrfToken)
     {
         $stmt = $this->dbConnection->prepare('SELECT userid, hash FROM users WHERE lower(username) = :username');
         $stmt->execute([
@@ -58,6 +60,7 @@ class User
         }
 
         $this->reHashWhenNeeded($recordset['userid'], $password, $recordset['hash']);
+        $csrfToken->regenerateToken();
 
         return true;
     }
