@@ -67,4 +67,13 @@ class Session
 
         return false;
     }
+
+    /**
+     * Regenerates a new session id and initializes the session superglobal
+     */
+    public function regenerate()
+    {
+        session_regenerate_id(true);
+        $_SESSION = [];
+    }
 }
