@@ -2,11 +2,23 @@
 /**
  * A Compatibility library with PHP 5.5's simplified password hashing API.
  *
- * @author Anthony Ferrara <ircmaxell@php.net>
- * @license http://www.opensource.org/licenses/mit-license.html MIT License
- * @copyright 2012 The Authors
+ * PHP version 5.4
+ *
+ * @category   RichUploader
+ * @package    Security
+ * @author     Anthony Ferrara <ircmaxell@php.net>
+ * @copyright  2012 The Authors
+ * @license    http://www.opensource.org/licenses/mit-license.html  MIT License
+ * @version    1.0.0
  */
 
+/**
+ * A Compatibility library with PHP 5.5's simplified password hashing API.
+ *
+ * @category   RichUploader
+ * @package    Security
+ * @author     Anthony Ferrara <ircmaxell@php.net>
+ */
 if (version_compare(PHP_VERSION, '5.3.7', '<')) {
     trigger_error("The Password Compatibility Library requires PHP >= 5.3.7", E_USER_WARNING);
     // Prevent defining the functions

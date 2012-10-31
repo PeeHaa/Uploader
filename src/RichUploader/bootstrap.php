@@ -18,4 +18,4 @@ $autoloader = new Core\AutoLoader(__NAMESPACE__, dirname(__DIR__));
 
 $autoloader->register();
 
-require_once __DIR__ . '/Password/password_compat.php';
+require_once __DIR__ . '/Security/password_compat.php';
