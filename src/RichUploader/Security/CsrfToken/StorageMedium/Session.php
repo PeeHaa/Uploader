@@ -64,7 +64,7 @@ class Session implements StorageMedium
     /**
      * Gets the CSRF token
      *
-     * @return string The CSRF token
+     * @return string|null The CSRF token or null when there isn't a token stored (yet)
      */
     public function get()
     {
