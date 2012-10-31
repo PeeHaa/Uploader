@@ -15,7 +15,8 @@
  */
 namespace RichUploader\Security\CsrfToken\StorageMedium;
 
-use RichUploader\Security\CsrfToken\StorageMedium;
+use RichUploader\Security\CsrfToken\StorageMedium,
+    RichUploader\Storage\Session as SessionStorage;
 
 /**
  * Interface for classes that store CSRF tokens
@@ -34,13 +35,20 @@ class Session implements StorageMedium
     private $key;
 
     /**
+     * \RichUpload\Storage\Session Instance of the session class
+     */
+    private $session;
+
+    /**
      * Creates instance
      *
      * @param string $key The key under which to store the token
+     * @param \RichUpload\Storage\Session Instance of the session class
      */
-    public function __construct($key)
+    public function __construct($key, SessionStorage $session)
     {
-        $this->key = $key;
+        $this->key     = $key;
+        $this->session = $session;
     }
 
     /**
@@ -50,7 +58,7 @@ class Session implements StorageMedium
      */
     public function set($token)
     {
-        $_SESSION[$this->key] = $token;
+        $this->session->set($this->key, $token);
     }
 
     /**
@@ -60,8 +68,8 @@ class Session implements StorageMedium
      */
     public function get()
     {
-        if (array_key_exists($this->key, $_SESSION)) {
-            return $_SESSION[$this->key];
+        if ($this->session->isKeyvalid($this->key)) {
+            return $this->session->get($this->key);
         }
 
         return null;

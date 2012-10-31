@@ -15,12 +15,8 @@ namespace Application;
 use RichUploader\Core\Autoloader,
     RichUploader\Upload\Uploader,
     RichUploader\Security\CsrfToken,
-    RichUploader\Security\CsrfToken\StorageMedium\Session;
-
-/**
- * start the session
- */
-session_start();
+    RichUploader\Security\CsrfToken\StorageMedium\Session as CsrfSession,
+    RichUploader\Storage\Session;
 
 /**
  * set up the limits for the upload process
@@ -40,9 +36,15 @@ $autoloader = new AutoLoader(__NAMESPACE__, dirname(__DIR__));
 $autoloader->register();
 
 /**
+ * start the session
+ */
+session_start();
+$session = new Session();
+
+/**
  * setup the CSRF token
  */
-$csrfToken = new CsrfToken(new Session('csrf_token'));
+$csrfToken = new CsrfToken(new CsrfSession('csrf_token', $session));
 
 /**
  * setup the router
