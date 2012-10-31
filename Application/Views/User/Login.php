@@ -56,8 +56,8 @@ class Login extends BaseView
     /**
      * Creates instance
      *
-     * @param \Application\Models\User $userModel The user model
-     * @param \RichUploader\Security\CsrfToken   $csrfToken    The CSRF token
+     * @param \Application\Models\User           $userModel The user model
+     * @param \RichUploader\Security\CsrfToken   $csrfToken The CSRF token
      */
     public function __construct(User $userModel, CsrfToken $csrfToken)
     {
