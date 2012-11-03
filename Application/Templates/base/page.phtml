@@ -1,6 +1,6 @@
 <?php
 if ($this->templateVariables['isUserLoggedIn']) {
-    $content = require 'upload.phtml';
+    $content = require dirname(__DIR__) . '../upload/uploader.phtml';
     $header  = require dirname(__DIR__) . '../header/logged-in.phtml';
 } else {
     $content = require 'intro.phtml';
@@ -46,6 +46,11 @@ if ($this->templateVariables['isUserLoggedIn']) {
     </div>
     <script src="/js/XMLHttpRequest.js"></script>
     <script src="/js/fileuploader.js"></script>
+    <script src="/js/DomHandler.js"></script>
+    <script src="/js/Array.js"></script>
+    <script src="/js/Popup.js"></script>
+    <script src="/js/Authentication.js"></script>
+    <script src="/js/FileUpload.js"></script>
     <script src="/js/site.js"></script>
 </body>
 </html>
