@@ -48,6 +48,11 @@ class Request
     private $path = [];
 
     /**
+     * @var array Maps elements in the path to variables
+     */
+    private $pathVariables = [];
+
+    /**
      * Creates instance
      *
      * @param array $serverVariables The variables from the $_SERVER superglobal
@@ -59,8 +64,9 @@ class Request
         $this->serverVariables  = $serverVariables;
         $this->getVariables     = $getVariables;
         $this->postVariables    = $postVariables;
-        $this->requestVariables = $this->setRequestVariables();
-        $this->path             = $this->setPath();
+
+        $this->setRequestVariables();
+        $this->setPath();
     }
 
     /**
@@ -119,7 +125,27 @@ class Request
      */
     public function getPath()
     {
-        return $this->path;
+        return implode('/', $this->path);
+    }
+
+    /**
+     * Sets up the mapping of path parts to request variables
+     *
+     * @param array $mapping The mapping from path parts to request variables
+     *
+     * @throws \UnexpectedValueException When trying to map an path part which doesn't exist
+     */
+    public function setPathVariables(array $mapping)
+    {
+        foreach ($mapping as $key => $pathPartIndex) {
+            if (!array_key_exists($pathPartIndex, $this->path)) {
+                throw new \UnexpectedValueException(
+                    'Trying to map a path variable (with index `' . $pathPartIndex . '`) which doesn\'t exist.'
+                );
+            }
+
+            $this->pathVariables[$key] = $this->path[$pathPartIndex];
+        }
     }
 
     /**
@@ -180,6 +206,26 @@ class Request
     public function getRequestVariable($key, $defaultValue = null)
     {
         return (array_key_exists($key, $this->requestVariables) ? $this->requestVariables[$key] : $defaultValue);
+    }
+
+    /**
+     * Gets the path variables
+     *
+     * @return array The path variables
+     */
+    public function getPathVariables()
+    {
+        return $this->pathVariables;
+    }
+
+    /**
+     * Gets a path variable
+     *
+     * @return mixed The path variable value (or null if it doesn't exists)
+     */
+    public function getPathVariable($key, $defaultValue = null)
+    {
+        return (array_key_exists($key, $this->pathVariables) ? $this->pathVariables[$key] : $defaultValue);
     }
 
     /**

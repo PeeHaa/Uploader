@@ -74,8 +74,8 @@ class User
      */
     public function logout(Logout $view, Request $request)
     {
-        if ($request->getPostVariable('username') !== null) {
-            $view->setToken($request->getGetVariable('csrf-token'));
+        if ($request->getPathVariable('csrf-token') !== null) {
+            $view->setToken($request->getPathVariable('csrf-token'));
         }
 
         return $view;

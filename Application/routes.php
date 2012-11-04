@@ -24,6 +24,9 @@ $routes = [
             'path'   => '/^(\/?logout\/.+\/?)$/',
             'method' => 'get',
         ],
+        'mapping' => [
+            'csrf-token' => 1,
+        ],
     ],
     'upload' => [
         'requirements' => [
