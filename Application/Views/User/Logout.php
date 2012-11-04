@@ -70,12 +70,9 @@ class Logout extends BaseView
      */
     public function render()
     {
-        echo 'logging out the user';
         if ($this->csrfToken->validate($this->token)) {
-            echo 'token is valid';
             $this->userModel->logout();
         }
-        echo 'test'; die;
 
         header('Location: http://uploader.localhost');
         exit();
