@@ -15,7 +15,8 @@
 namespace Application\Views\Frontpage;
 
 use Application\Views\BaseView,
-    Application\Models\User;
+    Application\Models\User,
+    RichUploader\Security\CsrfToken;
 
 /**
  * Frontpage view
@@ -33,13 +34,20 @@ class Index extends BaseView
     private $userModel;
 
     /**
+     * @var string The supplied CSRF token
+     */
+    private $token;
+
+    /**
      * Creates instance
      *
-     * @param \Application\Models\User $userModel The user model
+     * @param \Application\Models\User           $userModel The user model
+     * @param \RichUploader\Security\CsrfToken   $csrfToken The CSRF token
      */
-    public function __construct(\Application\Models\User $userModel)
+    public function __construct(\Application\Models\User $userModel, CsrfToken $csrfToken)
     {
         $this->userModel = $userModel;
+        $this->csrfToken = $csrfToken;
     }
 
     /**
@@ -58,5 +66,6 @@ class Index extends BaseView
     protected function setTemplateVariables()
     {
         $this->templateVariables['isUserLoggedIn'] = $this->userModel->isLoggedIn();
+        $this->templateVariables['csrfToken']      = $this->csrfToken->getToken();
     }
 }
