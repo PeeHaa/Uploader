@@ -14,7 +14,9 @@
 namespace Application\Controllers;
 
 use Application\Views\User\Login,
-    Application\Views\User\LoginPopup;
+    Application\Views\User\LoginPopup,
+    Application\Views\User\Logout,
+    RichUploader\Http\Request;
 
 /**
  * User controller
@@ -41,22 +43,39 @@ class User
      * Sets up the login view
      *
      * @param \Application\Views\User\Login $view    The login view
-     * @param array                         $request The request parameters
+     * @param \RichUploader\Http\Request    $request The request parameters
      *
      * @return string The rendered view
      */
-    public function login(Login $view, array $request)
+    public function login(Login $view, Request $request)
     {
-        if (array_key_exists('username', $request)) {
-            $view->setUsername($request['username']);
+        if ($request->getPostVariable('username') !== null) {
+            $view->setUsername($request->getPostVariable('username'));
         }
 
-        if (array_key_exists('password', $request)) {
-            $view->setPassword($request['password']);
+        if ($request->getPostVariable('password') !== null) {
+            $view->setPassword($request->getPostVariable('password'));
         }
 
-        if (array_key_exists('csrf-token', $request)) {
-            $view->setToken($request['csrf-token']);
+        if ($request->getPostVariable('csrf-token') !== null) {
+            $view->setToken($request->getPostVariable('csrf-token'));
+        }
+
+        return $view;
+    }
+
+    /**
+     * Sets up the login view
+     *
+     * @param \Application\Views\User\Logout $view    The logout view
+     * @param \RichUploader\Http\Request     $request The request parameters
+     *
+     * @return string The rendered view
+     */
+    public function logout(Logout $view, Request $request)
+    {
+        if ($request->getPostVariable('username') !== null) {
+            $view->setToken($request->getGetVariable('csrf-token'));
         }
 
         return $view;

@@ -130,4 +130,12 @@ class User
 
         return false;
     }
+
+    /**
+     * Logs out the user
+     */
+    public function logout()
+    {
+        $this->session->regenerate();
+    }
 }

@@ -5,7 +5,7 @@ $header = <<<HEADER
           <li class="btn active" title="Upload"><a href="/login-popup"><i class="icon-black icon-arrow-up"></i></a></li>
           <li class="btn" title="Your files"><a href="/login-popup"><i class="icon-black icon-list-alt"></i></a></li>
           <li class="btn" title="Your settings"><a href="/login-popup"><i class="icon-black icon-wrench"></i></a></li>
-          <li class="btn" title="Logoff"><a href="/login-popup"><i class="icon-black icon-off"></i></a></li>
+          <li class="btn" title="Logoff"><a href="/logout/{$this->templateVariables['csrfToken']}"><i class="icon-black icon-off"></i></a></li>
         </ul>
 HEADER;
 
