@@ -25,7 +25,7 @@ use RichUploader\Http\Request,
  * @package    RequestMatcher
  * @author     Pieter Hordijk <info@pieterhordijk.com>
  */
-class Host implements Matchable
+class Path implements Matchable
 {
     /**
      * @var \RichUploader\Http\Request The request
