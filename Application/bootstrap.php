@@ -13,6 +13,7 @@
 namespace Application;
 
 use RichUploader\Core\Autoloader,
+    RichUploader\Http\Request,
     RichUploader\Upload\Uploader,
     RichUploader\Security\CsrfToken,
     RichUploader\Security\CsrfToken\StorageMedium\Session as CsrfSession,
@@ -47,6 +48,11 @@ $session = new Session();
 $csrfToken = new CsrfToken(new CsrfSession('csrf_token', $session));
 
 /**
+ * setup the request object
+ */
+$request = new Request($_SERVER, $_GET, $_POST);
+
+/**
  * setup the router
  */
 switch (true) {
@@ -60,7 +66,14 @@ switch (true) {
         $model      = new \Application\Models\User($dbConnection, $session);
         $view       = new \Application\Views\User\Login($model, $csrfToken);
         $controller = new \Application\Controllers\User();
-        $response   = $controller->login($view, $_POST);
+        $response   = $controller->login($view, $request);
+        break;
+
+    case preg_match('/^(\/?logout\/.+\/?)$/', $_SERVER['REQUEST_URI']):
+        $model      = new \Application\Models\User($dbConnection, $session);
+        $view       = new \Application\Views\User\Logout($model, $csrfToken);
+        $controller = new \Application\Controllers\User();
+        $response   = $controller->logout($view, $request);
         break;
 
     case preg_match('/^(\/?upload\/)/', $_SERVER['REQUEST_URI']):
@@ -72,7 +85,7 @@ switch (true) {
 
     default:
         $model      = new \Application\Models\User($dbConnection, $session);
-        $view       = new \Application\Views\Frontpage\Index($model);
+        $view       = new \Application\Views\Frontpage\Index($model, $csrfToken);
         $controller = new \Application\Controllers\Index();
         $response   = $controller->frontpage($view);
         break;
