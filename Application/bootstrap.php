@@ -14,6 +14,8 @@ namespace Application;
 
 use RichUploader\Core\Autoloader,
     RichUploader\Http\Request,
+    RichUploader\Http\RequestMatcher,
+    RichUploader\Http\RequestMatcher\Factory as RequestMatcherFactory,
     RichUploader\Upload\Uploader,
     RichUploader\Security\CsrfToken,
     RichUploader\Security\CsrfToken\StorageMedium\Session as CsrfSession,
@@ -55,39 +57,49 @@ $request = new Request($_SERVER, $_GET, $_POST);
 /**
  * setup the router
  */
-switch (true) {
-    case preg_match('/^(\/?login-popup\/?)$/', $_SERVER['REQUEST_URI']):
-        $view       = new \Application\Views\User\LoginPopup($csrfToken);
-        $controller = new \Application\Controllers\User();
-        $response   = $controller->loginPopup($view);
-        break;
+require 'routes.php';
+$requestMatcherFactory = new RequestMatcherFactory($request);
+$requestMatcher = new RequestMatcher($requestMatcherFactory);
 
-    case preg_match('/^(\/?login\/?)$/', $_SERVER['REQUEST_URI']):
+switch (true) {
+    case $requestMatcher->doesMatch($routes['user/login']['requirements']):
         $model      = new \Application\Models\User($dbConnection, $session);
         $view       = new \Application\Views\User\Login($model, $csrfToken);
         $controller = new \Application\Controllers\User();
         $response   = $controller->login($view, $request);
         break;
 
-    case preg_match('/^(\/?logout\/.+\/?)$/', $_SERVER['REQUEST_URI']):
+    case $requestMatcher->doesMatch($routes['user/login/popup']['requirements']):
+        $view       = new \Application\Views\User\LoginPopup($csrfToken);
+        $controller = new \Application\Controllers\User();
+        $response   = $controller->loginPopup($view);
+        break;
+
+    case $requestMatcher->doesMatch($routes['user/logout']['requirements']):
+        $request->setPathVariables($routes['user/logout']['mapping']);
+
         $model      = new \Application\Models\User($dbConnection, $session);
         $view       = new \Application\Views\User\Logout($model, $csrfToken);
         $controller = new \Application\Controllers\User();
         $response   = $controller->logout($view, $request);
         break;
 
-    case preg_match('/^(\/?upload\/)/', $_SERVER['REQUEST_URI']):
+    case $requestMatcher->doesMatch($routes['upload']['requirements']):
         $pathParts = explode('/', $_SERVER['REQUEST_URI']);
 
         $richUploader = new Uploader(end($pathParts));
         echo json_encode($richUploader->handleUpload('../data/'));
         break;
 
-    default:
+    case $requestMatcher->doesMatch($routes['index']['requirements']):
         $model      = new \Application\Models\User($dbConnection, $session);
         $view       = new \Application\Views\Frontpage\Index($model, $csrfToken);
         $controller = new \Application\Controllers\Index();
         $response   = $controller->frontpage($view);
+        break;
+
+    default:
+        // 404
         break;
 }
 
