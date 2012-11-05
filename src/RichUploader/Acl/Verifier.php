@@ -42,6 +42,11 @@ class Verifier
     private $roles = [];
 
     /**
+     * @var string The name of the user roel of the current user (cache)
+     */
+    private $userRole;
+
+    /**
      * Creates instance
      *
      * @param string                         $guestRole The name of the guestrole
@@ -55,9 +60,7 @@ class Verifier
 
     /**
      * Adds the roles of the system. The roles are simply an multidimensional array with the role as key. As value
-     * the role contains an array with either a numeric accesslevel (higher means a higher accesslevel) or
-     * an 'exclusive' array to give the role only access to items which can be accessed from roles within the
-     * 'exclusive' array.
+     * the role contains an array with a numeric accesslevel (higher means a higher accesslevel).
      *
      * @param array $roles The roles of the system
      *
@@ -78,14 +81,17 @@ class Verifier
     }
 
     /**
-     * Check whether the current user has access to an item by checking the provided permission
+     * Gets the role of the current user
      *
-     * @param string $permission The role needed to access an item
-     *
-     * @return boolean Whether the current user has access
+     * @return string The name of role of the current user
+     * @throws \DomainException When the user's role is not defined
      */
-    public function hasAccess($permission)
+    private function getUserRole()
     {
+        if ($this->userRole !== null) {
+            return $this->userRole;
+        }
+
         $role = $this->guestRole;
         if ($this->session->isKeyValid('user')) {
             $user = $this->session->get('user');
@@ -95,16 +101,79 @@ class Verifier
         }
 
         if (!array_key_exists($role, $this->roles)) {
-            return false;
+            throw new \DomainException('The current user\'s role (`' . $role . '`) is not defined.');
         }
 
-        $userRole = $this->roles[$role];
+        $this->userRole = $role;
 
-        if (array_key_exists('exclusive', $userRole) && in_array($permission, $userRole['exclusive']) {
+        return $role;
+    }
+
+    /**
+     * Gets the accesslevel of a role
+     *
+     * @param string The name of the role
+     *
+     * @return int The accesslevel of the role
+     * @throws \DomainException When the role is not defined
+     */
+    private function getAccesslevelOfRole($role)
+    {
+        if (!array_key_exists($role, $this->roles)) {
+            throw new \DomainException('The current user\'s role (`' . $role . '`) is not defined.');
+        }
+
+        return $this->roles[$role]['accesslevel'];
+    }
+
+    /**
+     * Check whether the role exactly matches with the user's role
+     *
+     * @param string $permission The role needed to access an item
+     *
+     * @return boolean Whether the current user has access
+     */
+    public function doesRoleMatch($permission)
+    {
+        $userRole = $this->getUserRole();
+
+        if ($permission == $userRole) {
             return true;
         }
 
-        if (array_key_exists($permission, $this->roles) && $userRole['accesslevel'] >= $this->roles[$permission]) {
+        return false;
+    }
+
+    /**
+     * Check whether the user role meets the minimum accesslevel
+     *
+     * @param string $permission The role needed to access an item
+     *
+     * @return boolean Whether the current user has access
+     */
+    public function doesRoleMatchMinimumAccesslevel($permission)
+    {
+        $userRole = $this->getUserRole();
+
+        if ($this->getAccesslevelOfRole($userRole) >= $this->getAccesslevelOfRole($permission)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Check whether the user role meets the maximum accesslevel
+     *
+     * @param string $permission The role needed to access an item
+     *
+     * @return boolean Whether the current user has access
+     */
+    public function doesRoleMatchMaximumAccesslevel($permission)
+    {
+        $userRole = $this->getUserRole();
+
+        if ($this->getAccesslevelOfRole($userRole) <= $this->getAccesslevelOfRole($permission)) {
             return true;
         }
 
