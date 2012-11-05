@@ -15,6 +15,7 @@
 namespace RichUploader\Http\RequestMatcher;
 
 use RichUploader\Http\Request,
+    RichUploader\Acl\Verifier,
     RichUploader\Http\RequestMatcher\Matchable;
 
 /**
@@ -33,13 +34,20 @@ class Factory
     private $request;
 
     /**
+     * @var \RichUploader\Acl\Verifier The access control list
+     */
+    private $acl;
+
+    /**
      * Creates instance
      *
      * @param \RichUploader\Http\Request The request to check whether it matches with the requirements
+     * @param \RichUploader\Acl\Verifier The access control list
      */
-    public function __construct(Request $request)
+    public function __construct(Request $request, Verifier $acl)
     {
         $this->request = $request;
+        $this->acl     = $acl;
     }
 
     /**
@@ -59,7 +67,11 @@ class Factory
             throw new \UnexpectedValueException('Unknown RequestMatcher (`' . $class . '`).');
         }
 
-        $matcher = new $class($this->request);
+        if ($type == 'permissions') {
+            $matcher = new $class($this->acl);
+        } else {
+            $matcher = new $class($this->request);
+        }
 
         if (!($matcher instanceof Matchable)) {
             throw new \UnexpectedValueException('Class (`' . $class . '`) does not implement the RequestMatcher interface.');
