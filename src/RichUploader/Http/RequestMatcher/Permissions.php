@@ -54,7 +54,7 @@ class Permissions implements Matchable
         $match = true;
 
         foreach ($requirement as $role) {
-            switch ($req) {
+            switch ($role) {
                 case 'match':
                     $match = $this->acl->doesRoleMatch($role);
                     break;
