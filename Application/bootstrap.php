@@ -90,8 +90,8 @@ switch (true) {
     case $requestMatcher->doesMatch($routes['user/logout']['requirements']):
         $request->setPathVariables($routes['user/logout']['mapping']);
 
-        $model      = new \Application\Models\User($dbConnection, $session);
-        $view       = new \Application\Views\User\Logout($model, $csrfToken);
+        $userModel  = new \Application\Models\User($dbConnection, $session);
+        $view       = new \Application\Views\User\Logout($userModel, $csrfToken);
         $controller = new \Application\Controllers\User();
         $response   = $controller->logout($view, $request);
         break;
@@ -112,8 +112,8 @@ switch (true) {
         break;
 
     case $requestMatcher->doesMatch($routes['index']['requirements']):
-        $model      = new \Application\Models\User($dbConnection, $session);
-        $view       = new \Application\Views\Frontpage\Index($model, $csrfToken);
+        $userModel  = new \Application\Models\User($dbConnection, $session);
+        $view       = new \Application\Views\Frontpage\Index($userModel, $csrfToken);
         $controller = new \Application\Controllers\Index();
         $response   = $controller->frontpage($view);
         break;
