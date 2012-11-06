@@ -19,7 +19,8 @@ use RichUploader\Core\Autoloader,
     RichUploader\Upload\Uploader,
     RichUploader\Security\CsrfToken,
     RichUploader\Security\CsrfToken\StorageMedium\Session as CsrfSession,
-    RichUploader\Storage\Session;
+    RichUploader\Storage\Session,
+    RichUploader\Acl\Verifier;
 
 /**
  * set up the limits for the upload process
@@ -55,10 +56,21 @@ $csrfToken = new CsrfToken(new CsrfSession('csrf_token', $session));
 $request = new Request($_SERVER, $_GET, $_POST);
 
 /**
+ * Load the roles of the system
+ */
+require 'roles.php';
+
+/**
+ * setup ACL
+ */
+$acl = new Verifier($session);
+$acl->addRoles($roles);
+
+/**
  * setup the router
  */
 require 'routes.php';
-$requestMatcherFactory = new RequestMatcherFactory($request);
+$requestMatcherFactory = new RequestMatcherFactory($request, $acl);
 $requestMatcher = new RequestMatcher($requestMatcherFactory);
 
 switch (true) {
@@ -82,6 +94,14 @@ switch (true) {
         $view       = new \Application\Views\User\Logout($model, $csrfToken);
         $controller = new \Application\Controllers\User();
         $response   = $controller->logout($view, $request);
+        break;
+
+    case $requestMatcher->doesMatch($routes['user/settings']['requirements']):
+        $userModel    = new \Application\Models\User($dbConnection, $session);
+        $settingModel = new \Application\Models\Setting($dbConnection);
+        $view         = new \Application\Views\User\SettingsOverview($userModel, $settingModel);
+        $controller   = new \Application\Controllers\Setting();
+        $response     = $controller->overview($view);
         break;
 
     case $requestMatcher->doesMatch($routes['upload']['requirements']):
