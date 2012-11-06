@@ -58,7 +58,7 @@ class User
     public function login($username, $password, CsrfToken $csrfToken)
     {
         $stmt = $this->dbConnection->prepare(
-            'SELECT userid, username, email, hash FROM users WHERE lower(username) = :username'
+            'SELECT userid, username, email, hash, role FROM users WHERE lower(username) = :username'
         );
         $stmt->execute([
             'username' => strtolower($username),
@@ -114,6 +114,7 @@ class User
             'userid'   => $userData['userid'],
             'username' => $userData['username'],
             'email'    => $userData['email'],
+            'role'     => $userData['role'],
         ]);
     }
 
