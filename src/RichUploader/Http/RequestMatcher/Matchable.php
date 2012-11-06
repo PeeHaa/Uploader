@@ -27,13 +27,6 @@ use RichUploader\Http\Request;
 interface Matchable
 {
     /**
-     * Creates instance
-     *
-     * @param \RichUploader\Http\Request $request The request to check for requirements
-     */
-    public function __construct(Request $request);
-
-    /**
      * Check whether the requirements match
      *
      * @param mixed $requirement The requirement to check against
