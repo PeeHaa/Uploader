@@ -1,5 +1,5 @@
 'use strict';
 
 (function() {
-    var fileUpload = new FileUpload();
+    var fileUploader = new FileUploader();
 }());
