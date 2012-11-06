@@ -70,7 +70,7 @@ class Verifier
     {
         $parsedRoles = [];
         foreach ($roles as $role => $options) {
-            if (!array_key_exists('accesslevel')) {
+            if (!array_key_exists('accesslevel', $options)) {
                 throw new \DomainException(
                     'No Accesslevel defined for the role (`' . $role . '`).'
                 );
