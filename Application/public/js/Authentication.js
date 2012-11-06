@@ -9,7 +9,7 @@ Authentication.prototype.showPopup = function(popup, loginButton) {
         return;
     }
 
-    var xhr = new XMLHttpRequest();
+    var xhr = new CustomXMLHttpRequest();
     xhr.onreadystatechange = function() {
         if (xhr.readyState < 4 || xhr.status !== 200) {
             return;
@@ -32,7 +32,7 @@ Authentication.prototype.login = function(form) {
         return;
     }
 
-    var xhr = new XMLHttpRequest();
+    var xhr = new CustomXMLHttpRequest();
     xhr.onreadystatechange = function() {
         if (xhr.readyState < 4 || xhr.status !== 200) {
             return;
