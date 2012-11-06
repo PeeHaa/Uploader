@@ -1,7 +1,10 @@
 'use strict';
 
 function DomHandler(domElement) {
-    this.domElement = domElement;
+    this.domElement = null;
+    if (typeof domElement !== 'undefined') {
+        this.domElement = domElement;
+    }
 
     return this;
 }
