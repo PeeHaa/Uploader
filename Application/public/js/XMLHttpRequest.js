@@ -520,6 +520,6 @@
     }
 
     // Register new object with window
-    window.XMLHttpRequest = cXMLHttpRequest;
+    window.CustomXMLHttpRequest = cXMLHttpRequest;
 
 })();
