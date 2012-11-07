@@ -139,4 +139,20 @@ class User
     {
         $this->session->regenerate();
     }
+
+    /**
+     * Gets userid of logged in user
+     *
+     * @return int|boolean The userid or false when user is not logged in
+     */
+    public function getLoggedInUserId()
+    {
+        if (!$this->isLoggedIn()) {
+            return false;
+        }
+
+        $user = $this->session->get('user');
+
+        return $user['userid'];
+    }
 }
