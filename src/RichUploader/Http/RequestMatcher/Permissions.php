@@ -53,18 +53,18 @@ class Permissions implements Matchable
     {
         $match = true;
 
-        foreach ($requirement as $role) {
+        foreach ($requirement as $role => $accesslevel) {
             switch ($role) {
                 case 'match':
-                    $match = $this->acl->doesRoleMatch($role);
+                    $match = $this->acl->doesRoleMatch($accesslevel);
                     break;
 
                 case 'minimum':
-                    $match = $this->acl->doesRoleMatchMinimumAccesslevel($role);
+                    $match = $this->acl->doesRoleMatchMinimumAccesslevel($accesslevel);
                     break;
 
                 case 'maximum':
-                    $match = $this->acl->doesRoleMatchMaximumAccesslevel($role);
+                    $match = $this->acl->doesRoleMatchMaximumAccesslevel($accesslevel);
                     break;
             }
 
