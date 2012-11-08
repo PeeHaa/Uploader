@@ -28,6 +28,11 @@ class File
     private $filename;
 
     /**
+     * @var array A list of file types
+     */
+    private $fileTypes = [];
+
+    /**
      * Create instance
      *
      * @param string $filename The full filename including the path
@@ -42,7 +47,25 @@ class File
             throw new \DomainException('The filename (`' . $filename . '`) cannot be read.');
         }
 
-        $this->filename = $filename;
+        $this->filename  = $filename;
+        $this->fileTypes = $this->getFileTypes();
+    }
+
+    /**
+     * Gets a list of file types. This list is loaded from an external file in the same directory as this class. It is
+     * in an external file to prevent this code tye become unreadable.
+     *
+     * @return array The file types
+     * @throws \DomainException When file is not readable
+     */
+    private getFileTypes()
+    {
+        $filename = __DIR__ . '/mime-types.php';
+        if (!is_readable($filename)) {
+            throw new \DomainException('Mime types file (`' . $filename . '`) does not exist or is not readable.');
+        }
+
+        return $filename;
     }
 
     /**
@@ -93,43 +116,46 @@ class File
      */
     public function getMimeType()
     {
-        switch ($this->getExtension()) {
-            case '3gp':
-                return 'video/3gpp';
+        if (array_key_exists($this->getExtension(), $this->fileTypes)) {
+            return $this->fileTypes[$this->getExtension()]['type'];
+        }
 
-            case '3g2':
-                return 'video/3gpp2';
+        return 'application/octet-stream';
+    }
 
-            case '7z':
-                return 'application/x-7z-compressed';
+    /**
+     * Moves a file to a new location
+     *
+     * @param string $destination The destination
+     *
+     * @return \DomainException When the file could not be moved
+     */
+    public function move($destination)
+    {
+        if (!is_dir($uploadDirectory)) {
+            $this->createDirectory($uploadDirectory);
+        }
 
-            case 'ace':
-                return 'application/x-ace-compressed';
+        if (!rename($this->filename, $destination . $this->getFilename())) {
+            throw new \DomainException(
+                'File (`' . $this->filename . '`) could not be moved to the destination directory (`' . $destination . '`).'
+            );
+        }
 
-            case 'air':
-                return 'application/vnd.adobe.air-application-installer-package+zip';
+        $this->filename = $destination . $this->getFilename();
+    }
 
-            case 'swf':
-                return 'application/x-shockwave-flash';
-
-            case 'pdf':
-                return 'application/pdf';
-
-            case 'aac':
-                return 'audio/x-aac';
-
-            case 'azw':
-                return 'application/vnd.amazon.ebook';
-
-            case 'case':
-                return 'audio/x-aiff';
-
-            case 'avi':
-                return 'video/x-msvideo';
-
-            case 'bin':
-            default:
-                return 'application/octet-stream';
+    /**
+     * Create a directory
+     *
+     * @param string $path The directory to create
+     *
+     * @throws \DomainException When the directory cannot be created
+     */
+    private function createDirectory($path)
+    {
+        if (!mkdir($path, 0666)) {
+            throw new \DomainException('Directory (`' . $path . '`) could not be created.');
         }
     }
 }
