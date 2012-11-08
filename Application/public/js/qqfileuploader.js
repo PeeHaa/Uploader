@@ -236,8 +236,10 @@ qq.obj2url = function(obj, temp, prefixDone){
 
     if (!prefixDone && temp) {
         prefix = (/\?/.test(temp)) ? (/\?$/.test(temp)) ? '' : '&' : '?';
-        uristrings.push(temp);
-        uristrings.push(qq.obj2url(obj));
+        //uristrings.push(temp);
+        //uristrings.push(qq.obj2url(obj));
+        temp += '/' + obj.qqfile
+        return temp;
     } else if ((Object.prototype.toString.call(obj) === '[object Array]') && (typeof obj != 'undefined') ) {
         // we wont use a for-in-loop on an array (performance)
         for (var i = 0, len = obj.length; i < len; ++i){
