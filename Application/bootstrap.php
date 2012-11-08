@@ -105,13 +105,23 @@ switch (true) {
         break;
 
     case $requestMatcher->doesMatch($routes['upload']['requirements']):
-        $pathParts = explode('/', $_SERVER['REQUEST_URI']);
-
-        $richUploader = new Uploader(end($pathParts));
-        echo json_encode($richUploader->handleUpload('../data/'));
+        $userModel    = new \Application\Models\User($dbConnection, $session);
+        $fileFactory  = new \RichUploader\FileSystem\FileFactory();
+        $uploadModel  = new \Application\Models\Upload($dbConnection, $userModel, $fileFactory, __DIR__ . '/data');
+        $view         = new \Application\Views\Upload\Result();
+        $richUploader = new Uploader($request);
+        $controller   = new \Application\Controllers\Upload($richUploader, $uploadModel, $request);
+        $response     = $controller->process($view);
         break;
 
-    case $requestMatcher->doesMatch($routes['index']['requirements']):
+    case $requestMatcher->doesMatch($routes['index/frontpage']['requirements']):
+        $userModel  = new \Application\Models\User($dbConnection, $session);
+        $view       = new \Application\Views\Frontpage\Index($userModel, $csrfToken);
+        $controller = new \Application\Controllers\Index();
+        $response   = $controller->frontpage($view);
+        break;
+
+    case $requestMatcher->doesMatch($routes['upload']['requirements']):
         $userModel  = new \Application\Models\User($dbConnection, $session);
         $view       = new \Application\Views\Frontpage\Index($userModel, $csrfToken);
         $controller = new \Application\Controllers\Index();
