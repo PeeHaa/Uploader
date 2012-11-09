@@ -95,6 +95,7 @@ class Verifier
         $role = $this->guestRole;
         if ($this->session->isKeyValid('user')) {
             $user = $this->session->get('user');
+
             if (array_key_exists('role', $user)) {
                 $role = $user['role'];
             }
