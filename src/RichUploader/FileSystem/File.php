@@ -44,7 +44,7 @@ class File
         }
 
         if (!is_readable($filename)) {
-            throw new \DomainException('The filename (`' . $filename . '`) cannot be read.');
+            throw new \DomainException('The file (`' . $filename . '`) cannot be read.');
         }
 
         $this->filename  = $filename;
@@ -58,7 +58,7 @@ class File
      * @return array The file types
      * @throws \DomainException When file is not readable
      */
-    private getFileTypes()
+    private function getFileTypes()
     {
         $filename = __DIR__ . '/mime-types.php';
         if (!is_readable($filename)) {
@@ -132,11 +132,11 @@ class File
      */
     public function move($destination)
     {
-        if (!is_dir($uploadDirectory)) {
-            $this->createDirectory($uploadDirectory);
+        if (!is_dir($destination)) {
+            $this->createDirectory($destination);
         }
 
-        if (!rename($this->filename, $destination . $this->getFilename())) {
+        if (!rename($this->filename, $destination . '/' . $this->getFilename())) {
             throw new \DomainException(
                 'File (`' . $this->filename . '`) could not be moved to the destination directory (`' . $destination . '`).'
             );
