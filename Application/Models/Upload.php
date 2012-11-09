@@ -73,7 +73,7 @@ class Upload
      */
     public function process($temporaryFilename)
     {
-        $file = $this->fileFactory($temporaryFilename);
+        $file = $this->fileFactory->build($temporaryFilename);
 
         $checksum = $file->getSha1Checksum();
 
