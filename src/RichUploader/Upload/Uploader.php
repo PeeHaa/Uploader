@@ -13,7 +13,8 @@
  */
 namespace RichUploader\Upload;
 
-use RichUploader\Upload\Xhr;
+use RichUploader\Upload\Xhr,
+    RichUploader\Http\Request;
 
 /**
  * Main class which handles file uploads
@@ -44,22 +45,26 @@ class Uploader
      */
     private $uploadName;
 
-    private $filename;
+    /**
+     * @var \RichUploader\Http\Request The request object
+     */
+    private $request;
 
     /**
      * Creates an instance
      *
+     * @param \RichUploader\Http\Request The request object
      * @param array $allowedExtensions List of blocked extensions
      * @param int   $sizeLimit         Maximum size of upload (default is 512MB)
      */
-    public function __construct($filename, array $blockedExtensions = array(), $sizeLimit = 536870912){
-        $this->filename          = $filename;
+    public function __construct($request, array $blockedExtensions = array(), $sizeLimit = 536870912){
+        $this->request           = $request;
         $this->blockedExtensions = array_map('strtolower', $blockedExtensions);
         $this->sizeLimit         = $sizeLimit;
 
         $this->validateServerSettings();
 
-        $this->uploadHandler = new Xhr($filename, 'qqfile');
+        $this->uploadHandler = new Xhr($this->request->getPathVariable('filename'), 'qqfile');
         return;
 
         if (isset($_GET['qqfile'])) {
@@ -114,7 +119,7 @@ class Uploader
     /**
      * Returns array('success'=>true) or array('error'=>'error message')
      */
-    function handleUpload($uploadDirectory, $replaceOldFile = FALSE){
+    function handleUpload($uploadDirectory, $replaceOldFile = true){
         if (!is_writable($uploadDirectory)){
             return array('error' => "Server error. Upload directory isn't writable.");
         }
@@ -154,7 +159,7 @@ class Uploader
 
         $this->uploadName = $filename . $ext;
 
-        if ($this->uploadHandler->save($uploadDirectory . $filename . $ext)){
+        if ($this->uploadHandler->save($uploadDirectory . '/' . $filename . $ext)){
             return array(
                 'success'=>true,
             );
