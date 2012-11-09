@@ -15,7 +15,7 @@ namespace Application\Controllers;
 
 use Application\Views\Upload\Result,
     RichUploader\Upload\Uploader,
-    Application\Models\Upload,
+    Application\Models\Upload as UploadModel,
     RichUploader\Http\Request;
 
 /**
@@ -49,7 +49,7 @@ class Upload
      * @param \Application\Models\Upload    $uploadModel The upload model
      * @param \RichUploader\Http\Request    $request     The request object
      */
-    public function __construct(Uploader $uploader, Upload $uploadModel, Request $request)
+    public function __construct(Uploader $uploader, UploadModel $uploadModel, Request $request)
     {
         $this->uploader    = $uploader;
         $this->uploadModel = $uploadModel;
@@ -65,17 +65,17 @@ class Upload
      */
     public function process(Result $view)
     {
-        $result = $uploader->handleUpload(sys_get_temp_dir())
+        $result = $this->uploader->handleUpload(sys_get_temp_dir());
 
         if (array_key_exists('success', $result) && $result['success'] === true) {
             try {
-                $this->uploadModel->process(sys_get_temp_dir() . '/' . $request->getPathVariable('filename'));
+                $this->uploadModel->process(sys_get_temp_dir() . DIRECTORY_SEPARATOR . $this->request->getPathVariable('filename'));
             } catch (\DomainException $e) {
                 $result = ['error' => $e->getMessage()];
             }
         }
 
-        $this->setResult($result);
+        $view->setResult($result);
 
         return $view;
     }
