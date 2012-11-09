@@ -105,6 +105,8 @@ switch (true) {
         break;
 
     case $requestMatcher->doesMatch($routes['upload']['requirements']):
+        $request->setPathVariables($routes['upload']['mapping']);
+
         $userModel    = new \Application\Models\User($dbConnection, $session);
         $fileFactory  = new \RichUploader\FileSystem\FileFactory();
         $uploadModel  = new \Application\Models\Upload($dbConnection, $userModel, $fileFactory, __DIR__ . '/data');
