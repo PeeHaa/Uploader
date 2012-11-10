@@ -146,6 +146,24 @@ class File
     }
 
     /**
+     * Sets the filename
+     *
+     * @param string $newName The new filename
+     *
+     * @return \DomainException When the file could not be renamed
+     */
+    public function setName($newName)
+    {
+        if (!rename($this->filename, $destination . '/' . $name)) {
+            throw new \DomainException(
+                'File (`' . $this->filename . '`) could not be renamed.'
+            );
+        }
+
+        $this->filename = $destination . $this->getFilename();
+    }
+
+    /**
      * Create a directory
      *
      * @param string $path The directory to create
