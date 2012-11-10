@@ -114,7 +114,8 @@ class Upload
     }
 
     /**
-     * Moves the file to its final destination
+     * Moves the file to its final destination (sha1 hash of file with extension. In a directory with a name starting
+     * with the first two digits of the hash)
      *
      * @param \RichUploader\FileSystem\File $file     The instance of the uploaded file
      * @param string                        $checksum The checksum of the file
@@ -122,6 +123,8 @@ class Upload
     private function moveFile(File $file, $checksum)
     {
         $uploadDirectory = $this->dataDirectory . '/' . substr($checksum, 0, 2);
+
+        $file->rename($checksum . ($file->getExtension() ? '.' . $file->getExtension() : ''));
 
         $file->move($uploadDirectory);
     }
