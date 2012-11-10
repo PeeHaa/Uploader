@@ -38,11 +38,6 @@ class Request
     private $postVariables = [];
 
     /**
-     * @var array The request variables
-     */
-    private $requestVariables = [];
-
-    /**
      * @var array The elements in the path
      */
     private $path = [];
@@ -65,30 +60,7 @@ class Request
         $this->getVariables     = $getVariables;
         $this->postVariables    = $postVariables;
 
-        $this->setRequestVariables();
         $this->setPath();
-    }
-
-    /**
-     * Sets the request variables without relying on the $_REQUEST superglobal. It checks PHP's `request_order` ini
-     * setting to find out the correct order in which to add the variables from: $_POST and $_GET
-     */
-    private function setRequestVariables()
-    {
-        $requestOrder = ini_get('request_order');
-        while ($requestOrder) {
-            switch (strtolower(substr($requestOrder, 0, 1))) {
-                case 'g':
-                    $this->requestVariables = array_merge($this->requestVariables, $this->getVariables);
-                    break;
-
-                case 'p':
-                    $this->requestVariables = array_merge($this->requestVariables, $this->postVariables);
-                    break;
-            }
-
-            $requestOrder = substr($requestOrder, 1);
-        }
     }
 
     /**
@@ -108,14 +80,9 @@ class Request
      */
     private function getBarePath()
     {
-        if (!isset($this->serverVariables['PATH_INFO'])) {
-            $lastSlash = strrpos($this->serverVariables['SCRIPT_NAME'], '/');
-            $currentPath = current(explode('?', $this->serverVariables['REQUEST_URI'], 2));
+        $currentPath = current(explode('?', $this->serverVariables['REQUEST_URI'], 2));
 
-            return $lastSlash === 0 ? substr($currentPath, 1) : substr($currentPath, $lastSlash+1);
-        } else {
-            return substr($this->serverVariables['PATH_INFO'], 1);
-        }
+        return trim($currentPath, '/');
     }
 
     /**
@@ -125,7 +92,7 @@ class Request
      */
     public function getPath()
     {
-        return implode('/', $this->path);
+        return '/' . implode('/', $this->path);
     }
 
     /**
@@ -189,26 +156,6 @@ class Request
     }
 
     /**
-     * Gets the request variables
-     *
-     * @return array The request variables
-     */
-    public function getRequestVariables()
-    {
-        return $this->requestVariables;
-    }
-
-    /**
-     * Gets a request variable
-     *
-     * @return mixed The request variable value (or null if it doesn't exists)
-     */
-    public function getRequestVariable($key, $defaultValue = null)
-    {
-        return (array_key_exists($key, $this->requestVariables) ? $this->requestVariables[$key] : $defaultValue);
-    }
-
-    /**
      * Gets the path variables
      *
      * @return array The path variables
@@ -255,6 +202,6 @@ class Request
      */
     public function isSsl()
     {
-        return !(empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off');
+        return !(empty($this->serverVariables['HTTPS']) || $this->serverVariables['HTTPS'] == 'off');
     }
 }
