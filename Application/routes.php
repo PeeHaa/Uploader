@@ -1,7 +1,7 @@
 <?php
 
 $routes = [
-    'index' => [
+    'index/frontpage' => [
         'requirements' => [
             'path' => '/^\/?$/',
             'method' => 'get',
@@ -48,10 +48,14 @@ $routes = [
     ],
     'upload' => [
         'requirements' => [
-            'path' => '/^(\/?upload\/?)/',
+            'path' => '/^(\/?upload\/.*\/?)$/',
+            'method' => 'post',
             'permissions' => [
                 'minimum' => 'user',
             ],
+        ],
+        'mapping' => [
+            'filename' => 1,
         ],
     ],
 ];
