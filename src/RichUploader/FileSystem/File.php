@@ -109,6 +109,16 @@ class File
     }
 
     /**
+     * Gets the path to the file (without a trailing slash)
+     *
+     * @return string The path
+     */
+    public function getPath()
+    {
+        return pathinfo($this->filename, PATHINFO_DIRNAME);
+    }
+
+    /**
      * Gets the MIME type of the file. Note that currently it only checks for extension so it should not really be
      * trusted in any way since it can easily be fooled.
      *
@@ -152,15 +162,15 @@ class File
      *
      * @return \DomainException When the file could not be renamed
      */
-    public function setName($newName)
+    public function rename($newName)
     {
-        if (!rename($this->filename, $destination . '/' . $name)) {
+        if (!rename($this->filename, $this->getPath() . '/' . $newName)) {
             throw new \DomainException(
                 'File (`' . $this->filename . '`) could not be renamed.'
             );
         }
 
-        $this->filename = $destination . $this->getFilename();
+        $this->filename = $this->getPath() . '/'. $newName;
     }
 
     /**
