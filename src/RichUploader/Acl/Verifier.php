@@ -14,7 +14,7 @@
  */
 namespace RichUploader\Acl;
 
-use RichUploader\Storage\Session;
+use RichUploader\Storage\SessionInterface;
 
 /**
  * An ACL container. This class provides a secure container from which the controller actions will be called
@@ -49,10 +49,10 @@ class Verifier
     /**
      * Creates instance
      *
-     * @param string                         $guestRole The name of the guestrole
-     * @param \RichUploader\Storage\Session  $session   The user session
+     * @param string                                  $guestRole The name of the guestrole
+     * @param \RichUploader\Storage\SessionInterface  $session   The user session
      */
-    public function __construct(Session $session, $guestRole = 'guest')
+    public function __construct(SessionInterface $session, $guestRole = 'guest')
     {
         $this->session   = $session;
         $this->guestRole = $guestRole;
@@ -65,6 +65,8 @@ class Verifier
      * @param array $roles The roles of the system
      *
      * @throws \DomainException When there is no accesslevel
+     * @throws \DomainException When accesslevel is not an integer value
+     * @throws \DomainException When roles do not contain a guest account
      */
     public function addRoles(array $roles)
     {
@@ -72,11 +74,21 @@ class Verifier
         foreach ($roles as $role => $options) {
             if (!array_key_exists('accesslevel', $options)) {
                 throw new \DomainException(
-                    'No Accesslevel defined for the role (`' . $role . '`).'
+                    'No accesslevel defined for the role (`' . $role . '`).'
+                );
+            }
+
+            if (!is_int($options['accesslevel'])) {
+                throw new \DomainException(
+                    'Accesslevel is not an integer for the role (`' . $role . '`).'
                 );
             }
 
             $this->roles[$role] = $options;
+        }
+
+        if (!array_key_exists($this->guestRole, $this->roles)) {
+            throw new \DomainException('Roles must containa guest role (`' . $this->guestRole . '`).');
         }
     }
 

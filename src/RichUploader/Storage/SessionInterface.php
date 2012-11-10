@@ -1,7 +1,7 @@
 <?php
 /**
- * Session class. Instead of directly calling the $_SESSION superglobal we are using this class so that
- * testing will be more easy.
+ * Session interface. All classes which represent a session should implement this. This is useful for creating a mock
+ * session class.
  *
  * PHP version 5.4
  *
@@ -14,17 +14,15 @@
  */
 namespace RichUploader\Storage;
 
-use RichUploader\Storage\SessionInterface;
-
 /**
- * Session class. Instead of directly calling the $_SESSION superglobal we are using this class so that
- * testing will be more easy.
+ * Session interface. All classes which represent a session should implement this. This is useful for creating a mock
+ * session class.
  *
  * @category   RichUploader
  * @package    Storage
  * @author     Pieter Hordijk <info@pieterhordijk.com>
  */
-class Session implements SessionInterface
+interface SessionInterface
 {
     /**
      * Sets the value
@@ -32,10 +30,7 @@ class Session implements SessionInterface
      * @param string $key   The key in which to store the value
      * @param mixed  $value The value to store
      */
-    public function set($key, $value)
-    {
-        $_SESSION[$key] = $value;
-    }
+    public function set($key, $value);
 
     /**
      * Gets a value from the session superglobal
@@ -45,14 +40,7 @@ class Session implements SessionInterface
      * @return mixed The value
      * @throws \OutOfBoundsException When the key is not found
      */
-    public function get($key)
-    {
-        if (!$this->isKeyValid($key)) {
-            throw new \OutOfBoundsException('Key (`' . $key . '`) not found in session.');
-        }
-
-        return $_SESSION[$key];
-    }
+    public function get($key);
 
     /**
      * Check whether the supplied key is valid (i.e. does exist in the session superglobal)
@@ -61,21 +49,10 @@ class Session implements SessionInterface
      *
      * @return boolean Whether the supplied key is valid
      */
-    public function isKeyValid($key)
-    {
-        if (array_key_exists($key, $_SESSION)) {
-            return true;
-        }
-
-        return false;
-    }
+    public function isKeyValid($key);
 
     /**
      * Regenerates a new session id and initializes the session superglobal
      */
-    public function regenerate()
-    {
-        session_regenerate_id(true);
-        $_SESSION = [];
-    }
+    public function regenerate();
 }
