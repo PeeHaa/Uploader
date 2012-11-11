@@ -47,8 +47,12 @@ DomHandler.prototype.getViewport = function() {
 };
 
 DomHandler.prototype.addClass = function(className) {
+    if ($(this.domElement).hasClass(className)) {
+        return;
+    }
+
     if (this.domElement.className) {
-        this.domElement.className + ' ';
+        this.domElement.className += ' ';
     }
 
     this.domElement.className += className;
@@ -108,6 +112,19 @@ DomHandler.prototype.getFormValues = function() {
     }
 
     return params;
+};
+
+DomHandler.prototype.closestByTagName = function(tagName) {
+    var element = this.domElement;
+    tagName = tagName.toUpperCase();
+
+    while(element.parentNode) {
+        element = element.parentNode;
+
+        if (element.tagName == tagName) {
+            return element;
+        }
+    }
 };
 
 /**
