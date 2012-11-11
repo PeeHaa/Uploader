@@ -16,6 +16,9 @@ function FileUploader() {
     this.popup          = new Popup();
     this.authentication = new Authentication();
     this.fixHeight      = new FixHeight();
+    this.menu           = new Menu();
+    this.page           = new Page();
+    this.filesOverview  = new FilesOverview(this.page);
 
     this.initializeEventListeners();
 }
@@ -31,11 +34,31 @@ FileUploader.prototype.addOnClickListeners = function() {
         var e           = e || window.event,
             target      = e.target || e.srcElement,
             header      = document.getElementById('header'),
-            loginButton = header.querySelector('a.login');
+            loginButton = header.querySelector('a.login'),
+            topMenu     = header.querySelector('ul.btn-group');
 
         // handle login
         if (loginButton !== null && $(loginButton).containsOrIs(target)) {
             this.authentication.showPopup(this.popup, loginButton);
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            return;
+        }
+
+        // handle menu click
+        if (topMenu !== null && $(topMenu).contains(target)) {
+            if (target.tagName == 'A') {
+                hyperlink = target;
+            } else {
+                hyperlink = $(target).closestByTagName('a');
+            }
+
+            this.menu.deactivateAll();
+            this.menu.activateItem(target);
+
+            this.filesOverview.load(hyperlink.href);
 
             e.preventDefault();
             e.stopPropagation();
