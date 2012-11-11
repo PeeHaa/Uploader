@@ -20,8 +20,6 @@ use Application\Models\User,
 /**
  * Part of the model layer that takes care of uploads
  *
- * @todo       Move all filesystem methods to separate class
- * @todo       Move all file methods to a separate class
  * @todo       Add extra layer for storage abstraction
  *
  * @category   Application
