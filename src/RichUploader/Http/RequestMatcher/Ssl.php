@@ -14,7 +14,7 @@
  */
 namespace RichUploader\Http\RequestMatcher;
 
-use RichUploader\Http\Request,
+use RichUploader\Http\RequestData,
     RichUploader\Http\RequestMatcher\Matchable;
 
 /**
@@ -28,16 +28,16 @@ use RichUploader\Http\Request,
 class Ssl implements Matchable
 {
     /**
-     * @var \RichUploader\Http\Request The request
+     * @var \RichUploader\Http\RequestData The request
      */
     private $request;
 
     /**
      * Creates instance
      *
-     * @param \RichUploader\Http\Request $request The request to check for requirements
+     * @param \RichUploader\Http\RequestData $request The request to check for requirements
      */
-    public function __construct(Request $request)
+    public function __construct(RequestData $request)
     {
         $this->request = $request;
     }
@@ -51,7 +51,7 @@ class Ssl implements Matchable
      */
     public function doesMatch($requirement)
     {
-        if ($this->request->getMethod() === $requirement) {
+        if ($this->request->isSsl() === $requirement) {
             return true;
         }
 

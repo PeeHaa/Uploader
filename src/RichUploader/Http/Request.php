@@ -13,6 +13,8 @@
  */
 namespace RichUploader\Http;
 
+use RichUploader\Http\RequestData;
+
 /**
  * Contains all the information of a HTTP request
  *
@@ -20,7 +22,7 @@ namespace RichUploader\Http;
  * @package    Http
  * @author     Pieter Hordijk <info@pieterhordijk.com>
  */
-class Request
+class Request implements RequestData
 {
     /**
      * @var array The server variables

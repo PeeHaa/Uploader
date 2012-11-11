@@ -14,7 +14,7 @@
  */
 namespace RichUploader\Http\RequestMatcher;
 
-use RichUploader\Http\Request,
+use RichUploader\Http\RequestData,
     RichUploader\Http\RequestMatcher\Matchable;
 
 /**
@@ -35,9 +35,9 @@ class Method implements Matchable
     /**
      * Creates instance
      *
-     * @param \RichUploader\Http\Request $request The request to check for requirements
+     * @param \RichUploader\Http\RequestData $request The request to check for requirements
      */
-    public function __construct(Request $request)
+    public function __construct(RequestData $request)
     {
         $this->request = $request;
     }
