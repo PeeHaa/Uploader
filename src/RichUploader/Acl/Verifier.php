@@ -14,7 +14,8 @@
  */
 namespace RichUploader\Acl;
 
-use RichUploader\Storage\SessionInterface;
+use RichUploader\Acl\Verifiable,
+    RichUploader\Storage\SessionInterface;
 
 /**
  * An ACL container. This class provides a secure container from which the controller actions will be called
@@ -24,7 +25,7 @@ use RichUploader\Storage\SessionInterface;
  * @package    Acl
  * @author     Pieter Hordijk <info@pieterhordijk.com>
  */
-class Verifier
+class Verifier implements Verifiable
 {
     /**
      * @var \RichUploader\Storage\Session The user session

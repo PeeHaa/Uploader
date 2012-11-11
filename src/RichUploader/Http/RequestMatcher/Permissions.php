@@ -14,7 +14,7 @@
  */
 namespace RichUploader\Http\RequestMatcher;
 
-use RichUploader\Acl\Verifier,
+use RichUploader\Acl\Verifiable,
     RichUploader\Http\RequestMatcher\Matchable;
 
 /**
@@ -35,9 +35,9 @@ class Permissions implements Matchable
     /**
      * Creates instance
      *
-     * @param \RichUploader\Http\Request $request The request to check for requirements
+     * @param \RichUploader\Acl\Verifiable $acl Instance of the acl
      */
-    public function __construct(Verifier $acl)
+    public function __construct(Verifiable $acl)
     {
         $this->acl = $acl;
     }
