@@ -3,13 +3,13 @@
 $routes = [
     'index/frontpage' => [
         'requirements' => [
-            'path' => '/^\/?$/',
+            'path' => '#^/?$#',
             'method' => 'get',
         ],
     ],
     'user/login' => [
         'requirements' => [
-            'path'   => '/^(\/?login\/?)$/',
+            'path'   => '#^(/login/?)$#',
             'method' => 'post',
             'permissions' => [
                 'match' => 'guest',
@@ -18,7 +18,7 @@ $routes = [
     ],
     'user/login/popup' => [
         'requirements' => [
-            'path'   => '/^(\/?login-popup\/?)$/',
+            'path'   => '#^(/login-popup/?)$#',
             'method' => 'get',
             'permissions' => [
                 'match' => 'guest',
@@ -27,7 +27,7 @@ $routes = [
     ],
     'user/logout' => [
         'requirements' => [
-            'path'   => '/^(\/?logout\/.+\/?)$/',
+            'path'   => '#^(/logout/.+/?)$#',
             'method' => 'get',
             'permissions' => [
                 'minimum' => 'user',
@@ -39,7 +39,7 @@ $routes = [
     ],
     'user/settings' => [
         'requirements' => [
-            'path'   => '/^(\/?settings\/?)$/',
+            'path'   => '#^(/settings\/)$#',
             'method' => 'get',
             'permissions' => [
                 'minimum' => 'user',
@@ -48,7 +48,7 @@ $routes = [
     ],
     'upload' => [
         'requirements' => [
-            'path' => '/^(\/?upload\/.*\/?)$/',
+            'path' => '#^(/upload/.*/?)$#',
             'method' => 'post',
             'permissions' => [
                 'minimum' => 'user',
@@ -56,6 +56,15 @@ $routes = [
         ],
         'mapping' => [
             'filename' => 1,
+        ],
+    ],
+    'user/uploads' => [
+        'requirements' => [
+            'path' => '#^(/your-files/?)$#',
+            'method' => 'get',
+            'permissions' => [
+                'minimum' => 'user',
+            ],
         ],
     ],
 ];

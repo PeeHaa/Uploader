@@ -130,6 +130,14 @@ switch (true) {
         $response   = $controller->frontpage($view);
         break;
 
+    case $requestMatcher->doesMatch($routes['user/uploads']['requirements']):
+        $userModel  = new \Application\Models\User($dbConnection, $session);
+        $fileModel  = new \Application\Models\File($dbConnection, $userModel);
+        $view       = new \Application\Views\Files\Overview($userModel, $fileModel);
+        $controller = new \Application\Controllers\File();
+        $response   = $controller->overview($view);
+        break;
+
     default:
         // 404
         break;
