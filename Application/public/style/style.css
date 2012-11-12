@@ -340,8 +340,64 @@ input[type="submit"] {
     height: 30px;
 }
 
-#dropzone {
+table.file-list {
+    background: white;
+    margin-top: 50px;
+    border-collapse: collapse;
+    font-size: 75%;
+    width: 100%;
+}
 
+table.file-list th, table.file-list td {
+    padding: 8px;
+    line-height: 20px;
+    text-align: left;
+    vertical-align: top;
+    border-top: 1px solid #dddddd;
+}
+
+table.file-list th {
+    text-align: left;
+    border-top: none;
+}
+
+table.file-list .filename {
+    background: red;
+}
+
+table.file-list .tags {
+    width: 278px;
+}
+
+table.file-list .tags a {
+    border-radius: 5px;
+    background: #dddddd;
+    padding: 4px;
+    margin: 0 0 0 10px;
+}
+
+table.file-list .tags a:first-child {
+    margin: 0;
+}
+
+table.file-list .access {
+    width: 70px;
+}
+
+table.file-list .timestamp {
+    width: 80px;
+}
+
+table.file-list .downloads {
+    width: 80px;
+}
+
+table.file-list .edit {
+    width: 22px;
+}
+
+table.file-list .delete {
+    width: 35px;
 }
 
 .qq-uploader {
