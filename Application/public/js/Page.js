@@ -4,7 +4,7 @@ function Page() {
 
 Page.prototype.load = function(type, url, cache) {
     if (this.isCached(type)) {
-        this.render(this.cachedPages[type]);
+        this.render(this.cachedPages[type], url);
 
         if (typeof cache === 'undefined' || cache !== true) {
             this.invalidateCache(type);
@@ -23,7 +23,7 @@ Page.prototype.load = function(type, url, cache) {
                     this.invalidateCache(type);
                 }
 
-                this.render(xhr.responseText);
+                this.render(xhr.responseText, url);
             }
         }.bind(this);
     }
@@ -54,7 +54,7 @@ Page.prototype.getCache = function(type) {
     return this.cachedPages[type];
 };
 
-Page.prototype.render = function(content) {
+Page.prototype.render = function(content, url) {
     var body   = document.getElementById('body'),
         footer = body.querySelector('footer'),
         newContent = document.createElement('div');
@@ -63,10 +63,24 @@ Page.prototype.render = function(content) {
 
     body.innerHTML = content;
     body.appendChild(clonedFooter);
+
+    this.setTitle('New Title');
+    this.setHistory(content, 'New Title', url);
 };
 
 Page.prototype.clearContents = function(element) {
     while (node.hasChildNodes()) {
         node.removeChild(node.lastChild);
     }
+};
+
+Page.prototype.setTitle = function(title) {
+    document.title = title;
+};
+
+Page.prototype.setHistory = function(content, title, urlPath) {
+    window.history.pushState({
+        'html': content,
+        'pageTitle': title
+    }, '', urlPath);
 };

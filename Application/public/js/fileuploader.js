@@ -27,6 +27,7 @@ FileUploader.prototype.initializeEventListeners = function() {
     this.addOnClickListeners();
     this.addOnSubmitListeners();
     this.addOnResizeListeners();
+    this.addOnPopState();
 };
 
 FileUploader.prototype.addOnClickListeners = function() {
@@ -95,4 +96,13 @@ FileUploader.prototype.addOnResizeListeners = function() {
     $(window).on('resize', function(e) {
         this.fixHeight.set();
     }.bind(this));
+};
+
+FileUploader.prototype.addOnPopState = function() {
+    window.onpopstate = function(e){
+        if (e.state) {
+            document.getElementById('body').innerHTML = e.state.html;
+            document.title = e.state.pageTitle;
+        }
+    };
 };
