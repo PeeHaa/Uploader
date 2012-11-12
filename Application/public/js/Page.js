@@ -28,7 +28,7 @@ Page.prototype.load = function(type, url, cache) {
         }.bind(this);
     }
 
-    xhr.open('GET', url, true);
+    xhr.open('GET', url + '/json', true);
     xhr.send();
 };
 

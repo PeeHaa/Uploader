@@ -60,7 +60,7 @@ $routes = [
     ],
     'user/uploads' => [
         'requirements' => [
-            'path' => '#^(/your-files/?)$#',
+            'path' => '#^(/your-files(/json)?/?)$#',
             'method' => 'get',
             'permissions' => [
                 'minimum' => 'user',
