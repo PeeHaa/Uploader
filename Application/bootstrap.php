@@ -132,7 +132,8 @@ switch (true) {
 
     case $requestMatcher->doesMatch($routes['user/uploads']['requirements']):
         $userModel  = new \Application\Models\User($dbConnection, $session);
-        $fileModel  = new \Application\Models\File($dbConnection, $userModel);
+        $tagModel   = new \Application\Models\Tag($dbConnection);
+        $fileModel  = new \Application\Models\File($dbConnection, $userModel, $tagModel);
         $view       = new \Application\Views\Files\Overview($userModel, $fileModel);
         $controller = new \Application\Controllers\File();
         $response   = $controller->overview($view);

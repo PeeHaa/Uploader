@@ -65,6 +65,6 @@ class Overview extends BaseView
      */
     protected function setTemplateVariables()
     {
-        //$this->templateVariables['csrfToken'] = $this->csrfToken->getToken();
+        $this->templateVariables['files'] = $this->fileModel->getFilesOfCurrentUser();
     }
 }

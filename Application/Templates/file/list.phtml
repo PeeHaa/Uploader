@@ -1,8 +1,6 @@
 <table class="file-list">
   <tr>
     <th class="original-filename">Original filename</th>
-    <th class="size">Size</th>
-    <th class="description">Description</th>
     <th class="tags">Tags</th>
     <th class="access">Access</th>
     <th class="timestamp">Timestamp</th>
@@ -10,37 +8,19 @@
     <th class="edit">&nbsp;</th>
     <th class="delete">&nbsp;</th>
   </tr>
-  <tr>
-    <td class="original-filename">some-wicked-lng-filename-i-like0-to-use.jopeg</td>
-    <td class="size">124MB</td>
-    <th class="description">Lorem ipsum dolor set emit...</th>
-    <td class="tags"><a href="#">download</a><a href="#">download</a><a href="#">download</a><a href="#">download</a></td>
-    <td class="access">Private</td>
-    <td class="timestamp">11-11-2012</td>
-    <td class="downloads">9999999</td>
-    <td class="edit"><a href="#">Edit</a></td>
-    <td class="delete"><a href="#">Delete</a></td>
-  </tr>
-  <tr>
-    <td class="original-filename">some-wicked-lng-filename-i-like0-to-use.jopeg</td>
-    <td class="size">124MB</td>
-    <th class="description">Lorem ipsum dolor set emit...</th>
-    <td class="tags"><a href="#">download</a><a href="#">download</a><a href="#">download</a><a href="#">download</a></td>
-    <td class="access">Public</td>
-    <td class="timestamp">11-11-2012</td>
-    <td class="downloads">9999999</td>
-    <td class="edit"><a href="#">Edit</a></td>
-    <td class="delete"><a href="#">Delete</a></td>
-  </tr>
-  <tr>
-    <td class="original-filename">some-wicked-lng-filename-i-like0-to-use.jopeg</td>
-    <td class="size">124MB</td>
-    <th class="description">Lorem ipsum dolor set emit...</th>
-    <td class="tags"><a href="#">download</a><a href="#">download</a><a href="#">download</a><a href="#">download</a></td>
-    <td class="access">99999 users</td>
-    <td class="timestamp">11-11-2012</td>
-    <td class="downloads">9999999</td>
-    <td class="edit"><a href="#">Edit</a></td>
-    <td class="delete"><a href="#">Delete</a></td>
-  </tr>
+  <?php foreach ($this->templateVariables['files'] as $file) { ?>
+    <tr>
+      <td class="original-filename"><?php echo $file['filename']; ?></td>
+      <td class="tags">
+        <?php if ($file['tags']) foreach ($file['tags'] as $tag) { ?>
+          <a href="#"><?php echo $tag; ?></a>
+        <?php } ?>
+      </td>
+      <td class="access">Private</td>
+      <td class="timestamp"><?php echo (new DateTime($file['timestamp']))->format('d-m-Y'); ?></td>
+      <td class="downloads">9999999</td>
+      <td class="edit"><a href="#">Edit</a></td>
+      <td class="delete"><a href="#">Delete</a></td>
+    </tr>
+  <?php } ?>
 </table>
