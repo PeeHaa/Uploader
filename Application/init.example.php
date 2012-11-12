@@ -14,7 +14,7 @@ ini_set('date.timezone', 'Europe/Amsterdam');
 /**
  * Bootstrap the library
  */
-require_once '/../src/RichUploader/bootstrap.php';
+require_once '/../Src/RichUploader/bootstrap.php';
 
 /**
  * Setup the database connection
