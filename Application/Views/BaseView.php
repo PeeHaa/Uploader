@@ -28,6 +28,26 @@ class BaseView
     protected $templateVariables = [];
 
     /**
+     * Sets the template variables and renders the page
+     *
+     * @param string $contentTemplate The template used to fill the content of the page
+     *
+     * @return string The rendered HTML page
+     */
+    public function renderPage($contentTemplate)
+    {
+        $this->templateVariables['pageContent'] = $this->renderTemplate($contentTemplate);
+
+        ob_start();
+        require '../Templates/base/page.phtml';
+
+        $renderedPage = ob_get_contents();
+        ob_end_clean();
+
+        return $renderedPage;
+    }
+
+    /**
      * Sets the template variables and renders the template
      *
      * @param string $templateFile The path to the template

@@ -3,8 +3,11 @@
 $routes = [
     'index/frontpage' => [
         'requirements' => [
-            'path' => '#^/?$#',
+            'path' => '#^/?(json)?$#',
             'method' => 'get',
+        ],
+        'mapping' => [
+            'json' => 0,
         ],
     ],
     'user/login' => [
@@ -65,6 +68,9 @@ $routes = [
             'permissions' => [
                 'minimum' => 'user',
             ],
+        ],
+        'mapping' => [
+            'json' => 1,
         ],
     ],
 ];

@@ -1,0 +1,8 @@
+<?php
+
+$response = [
+    'title' => $this->templateVariables['title'],
+    'html'  => $this->renderTemplate('file/list.phtml'),
+];
+
+echo json_encode($response);

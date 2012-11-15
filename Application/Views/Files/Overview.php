@@ -16,7 +16,8 @@ namespace Application\Views\Files;
 
 use Application\Views\BaseView,
     Application\Models\User,
-    Application\Models\File;
+    Application\Models\File,
+    RichUploader\Http\RequestData;
 
 /**
  * Login popup view
@@ -39,15 +40,22 @@ class Overview extends BaseView
     private $fileModel;
 
     /**
+     * $var \RichUploader\Http\RequestData The request
+     */
+    private $request;
+
+    /**
      * Creates instance
      *
      * @param \Application\Models\UserModel $userModel The user model
      * @param \Application\Models\FileModel $fileModel The file model
+     * @param \RichUploader\Http\RequestData     $request   The request
      */
-    public function __construct(User $userModel, File $fileModel)
+    public function __construct(User $userModel, File $fileModel, RequestData $request)
     {
         $this->userModel = $userModel;
         $this->fileModel = $fileModel;
+        $this->request   = $request;
     }
 
     /**
@@ -57,7 +65,11 @@ class Overview extends BaseView
      */
     public function render()
     {
-        return $this->renderTemplate('file/list.phtml');
+        if ($this->request->getPathVariable('json', false) === false) {
+            return $this->renderPage('file/list.phtml');
+        }
+
+        return $this->renderTemplate('file/list.pjson');
     }
 
     /**
@@ -65,6 +77,8 @@ class Overview extends BaseView
      */
     protected function setTemplateVariables()
     {
-        $this->templateVariables['files'] = $this->fileModel->getFilesOfCurrentUser();
+        $this->templateVariables['title']          = 'Your files';
+        $this->templateVariables['isUserLoggedIn'] = $this->userModel->isLoggedIn();
+        $this->templateVariables['files']          = $this->fileModel->getFilesOfCurrentUser();
     }
 }

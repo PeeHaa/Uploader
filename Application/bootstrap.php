@@ -117,8 +117,10 @@ switch (true) {
         break;
 
     case $requestMatcher->doesMatch($routes['index/frontpage']['requirements']):
+        $request->setPathVariables($routes['index/frontpage']['mapping']);
+
         $userModel  = new \Application\Models\User($dbConnection, $session);
-        $view       = new \Application\Views\Frontpage\Index($userModel, $csrfToken);
+        $view       = new \Application\Views\Frontpage\Index($userModel, $csrfToken, $request);
         $controller = new \Application\Controllers\Index();
         $response   = $controller->frontpage($view);
         break;
@@ -131,10 +133,12 @@ switch (true) {
         break;
 
     case $requestMatcher->doesMatch($routes['user/uploads']['requirements']):
+        $request->setPathVariables($routes['user/uploads']['mapping']);
+
         $userModel  = new \Application\Models\User($dbConnection, $session);
         $tagModel   = new \Application\Models\Tag($dbConnection);
         $fileModel  = new \Application\Models\File($dbConnection, $userModel, $tagModel);
-        $view       = new \Application\Views\Files\Overview($userModel, $fileModel);
+        $view       = new \Application\Views\Files\Overview($userModel, $fileModel, $request);
         $controller = new \Application\Controllers\File();
         $response   = $controller->overview($view);
         break;

@@ -4,7 +4,7 @@ function Page() {
 
 Page.prototype.load = function(type, url, cache) {
     if (this.isCached(type)) {
-        this.render(this.cachedPages[type], url);
+        this.render(this.cachedPages[type].title, this.cachedPages[type].html, url);
 
         if (typeof cache === 'undefined' || cache !== true) {
             this.invalidateCache(type);
@@ -23,7 +23,9 @@ Page.prototype.load = function(type, url, cache) {
                     this.invalidateCache(type);
                 }
 
-                this.render(xhr.responseText, url);
+                var jsonResponse = JSON.parse(xhr.responseText);
+
+                this.render(jsonResponse.title, jsonResponse.html, url);
             }
         }.bind(this);
     }
@@ -54,7 +56,7 @@ Page.prototype.getCache = function(type) {
     return this.cachedPages[type];
 };
 
-Page.prototype.render = function(content, url) {
+Page.prototype.render = function(title, content, url) {
     var body   = document.getElementById('body'),
         footer = body.querySelector('footer'),
         newContent = document.createElement('div');
@@ -64,8 +66,8 @@ Page.prototype.render = function(content, url) {
     body.innerHTML = content;
     body.appendChild(clonedFooter);
 
-    this.setTitle('New Title');
-    this.setHistory(content, 'New Title', url);
+    this.setTitle(title);
+    this.setHistory(content, title, url);
 };
 
 Page.prototype.clearContents = function(element) {
