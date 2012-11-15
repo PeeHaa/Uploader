@@ -108,9 +108,7 @@ class Request implements RequestData
     {
         foreach ($mapping as $key => $pathPartIndex) {
             if (!array_key_exists($pathPartIndex, $this->path)) {
-                throw new \UnexpectedValueException(
-                    'Trying to map a path variable (with index `' . $pathPartIndex . '`) which doesn\'t exist.'
-                );
+                continue;
             }
 
             $this->pathVariables[$key] = $this->path[$pathPartIndex];
@@ -174,7 +172,7 @@ class Request implements RequestData
      */
     public function getPathVariable($key, $defaultValue = null)
     {
-        return (array_key_exists($key, $this->pathVariables) ? $this->pathVariables[$key] : $defaultValue);
+        return (!empty($this->pathVariables[$key]) ? $this->pathVariables[$key] : $defaultValue);
     }
 
     /**
