@@ -21,7 +21,7 @@ Authentication.prototype.showPopup = function(popup, loginButton) {
         }
     };
 
-    xhr.open('GET', loginButton.href, true);
+    xhr.open('GET', loginButton.href + '/json', true);
     xhr.send();
 };
 
