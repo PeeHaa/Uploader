@@ -1,5 +1,7 @@
-function Page() {
+function Page(fileUploader) {
     this.cachedPages = {};
+
+    this.fileUploader = fileUploader;
 }
 
 Page.prototype.load = function(type, url, cache) {
@@ -68,6 +70,10 @@ Page.prototype.render = function(title, content, url) {
 
     this.setTitle(title);
     this.setHistory(content, title, url);
+
+    if (window.location.pathname == '' || window.location.pathname == '/') {
+        this.fileUploader.enableFileUploader();
+    }
 };
 
 Page.prototype.clearContents = function(element) {

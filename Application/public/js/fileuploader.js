@@ -1,27 +1,27 @@
 function FileUploader() {
-    function enableFileUploader() {
-        var uploadElement = document.getElementById('file-upload');
-        if (uploadElement === null) {
-            return;
-        }
-
-        var uploader = new qq.FileUploader({
-            element: uploadElement,
-            action: '/upload'
-        });
-    }
-
-    enableFileUploader();
+    this.enableFileUploader();
 
     this.popup          = new Popup();
     this.authentication = new Authentication();
     this.fixHeight      = new FixHeight();
     this.menu           = new Menu();
-    this.page           = new Page();
+    this.page           = new Page(this);
     this.filesOverview  = new FilesOverview(this.page);
 
     this.initializeEventListeners();
 }
+
+FileUploader.prototype.enableFileUploader = function() {
+    var uploadElement = document.getElementById('file-upload');
+    if (uploadElement === null) {
+        return;
+    }
+
+    var uploader = new qq.FileUploader({
+        element: uploadElement,
+        action: '/upload'
+    });
+};
 
 FileUploader.prototype.initializeEventListeners = function() {
     this.addOnClickListeners();
@@ -89,6 +89,11 @@ FileUploader.prototype.addOnClickListeners = function() {
 
                 xhr.open('GET', target.href + '/json', true);
                 xhr.send();
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                return;
             }
 
             if ($(target.parentNode).hasClass('delete')) {
@@ -109,7 +114,7 @@ FileUploader.prototype.addOnClickListeners = function() {
                             var tableRow = $(target.parentNode).closestByTagName('tr');
                             $(tableRow).fadeOut(function() {
                                 tableRow.parentNode.removeChild(tableRow);
-                            }, 75);
+                            }, 25);
                         } else {
                             alert('error!');
                         }
@@ -123,12 +128,12 @@ FileUploader.prototype.addOnClickListeners = function() {
 
                 xhr.open('POST', target.href + '/json', true);
                 xhr.send();
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                return;
             }
-
-            e.preventDefault();
-            e.stopPropagation();
-
-            return;
         }
 
         // remove popup when clicked on document somewhere
