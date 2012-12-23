@@ -71,24 +71,7 @@ FileUploader.prototype.addOnClickListeners = function() {
         // handle file edit and delete clicks
         if (fileList !== null) {
             if ($(target.parentNode).hasClass('edit')) {
-                if (this.popup.isActive()) {
-                    this.popup.remove();
-                }
-                var xhr = new CustomXMLHttpRequest();
-                xhr.onreadystatechange = function() {
-                    if (xhr.readyState < 4 || xhr.status !== 200) {
-                        return;
-                    }
-
-                    if (xhr.readyState === 4) {
-                        var result = JSON.parse(xhr.responseText);
-                        var popupElement = this.popup.show('file-info', result.html);
-                        popupElement.querySelector('input:first-child').focus();
-                    }
-                }.bind(this);
-
-                xhr.open('GET', target.href + '/json', true);
-                xhr.send();
+                this.filesOverview.showEditPopup(this.popup, target.href);
 
                 e.preventDefault();
                 e.stopPropagation();
@@ -97,37 +80,7 @@ FileUploader.prototype.addOnClickListeners = function() {
             }
 
             if ($(target.parentNode).hasClass('delete')) {
-                if (this.popup.isActive()) {
-                    this.popup.remove();
-                }
-
-                var xhr = new CustomXMLHttpRequest();
-                xhr.onreadystatechange = function() {
-                    if (xhr.readyState < 4 || xhr.status !== 200) {
-                        return;
-                    }
-
-                    if (xhr.readyState === 4) {
-                        var result = JSON.parse(xhr.responseText);
-
-                        if (result.result == 'success') {
-                            var tableRow = $(target.parentNode).closestByTagName('tr');
-                            $(tableRow).fadeOut(function() {
-                                tableRow.parentNode.removeChild(tableRow);
-                            }, 25);
-                        } else {
-                            alert('error!');
-                        }
-                        /*
-                        var result = JSON.parse(xhr.responseText);
-                        var popupElement = this.popup.show('file-info', result.html);
-                        popupElement.querySelector('input:first-child').focus();
-                        */
-                    }
-                }.bind(this);
-
-                xhr.open('POST', target.href + '/json', true);
-                xhr.send();
+                this.filesOverview.deleteFile(target.href);
 
                 e.preventDefault();
                 e.stopPropagation();
