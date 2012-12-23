@@ -1,6 +1,6 @@
 <?php
 /**
- * Overview of files view
+ * Edit file view
  *
  * PHP version 5.4
  *
@@ -21,14 +21,14 @@ use Application\Views\BaseView,
     RichUploader\Security\CsrfToken;
 
 /**
- * Overview of files view
+ * Edit file view
  *
  * @category   Application
  * @package    Views
  * @subpackage Files
  * @author     Pieter Hordijk <info@pieterhordijk.com>
  */
-class Overview extends BaseView
+class Edit extends BaseView
 {
     /**
      * @var \Application\Models\UserModel The user model
@@ -41,7 +41,7 @@ class Overview extends BaseView
     private $fileModel;
 
     /**
-     * $var \RichUploader\Http\RequestData The request
+     * @var \RichUploader\Http\RequestData The request
      */
     private $request;
 
@@ -74,10 +74,10 @@ class Overview extends BaseView
     public function render()
     {
         if ($this->request->getPathVariable('json', false) === false) {
-            return $this->renderPage('file/list.phtml');
+            return $this->renderPage('file/edit.phtml');
         }
 
-        return $this->renderTemplate('file/list.pjson');
+        return $this->renderTemplate('file/edit.pjson');
     }
 
     /**
@@ -85,9 +85,9 @@ class Overview extends BaseView
      */
     protected function setTemplateVariables()
     {
-        $this->templateVariables['title']          = 'Your files';
-        $this->templateVariables['isUserLoggedIn'] = $this->userModel->isLoggedIn();
-        $this->templateVariables['files']          = $this->fileModel->getFilesOfCurrentUser();
-        $this->templateVariables['csrfToken']      = $this->csrfToken->getToken();
+        $fileInfo = $this->fileModel->getFileById($this->request->getPathVariable('id'));
+        $this->templateVariables['title']     = 'Edit ' . $fileInfo['filename'] . ' - Your files';
+        $this->templateVariables['csrfToken'] = $this->csrfToken->getToken();
+        $this->templateVariables['fileInfo']  = $fileInfo;
     }
 }

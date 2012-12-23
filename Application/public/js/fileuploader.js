@@ -36,10 +36,11 @@ FileUploader.prototype.addOnClickListeners = function() {
             target      = e.target || e.srcElement,
             header      = document.getElementById('header'),
             loginButton = header.querySelector('a.login'),
-            topMenu     = header.querySelector('ul.btn-group');
+            topMenu     = header.querySelector('ul.btn-group'),
+            fileList    = document.querySelector('table.file-list');
 
         // handle login
-        if (loginButton !== null && $(loginButton).containsOrIs(target)) {
+        if (false || loginButton !== null && $(loginButton).containsOrIs(target)) {
             this.authentication.showPopup(this.popup, loginButton);
 
             e.preventDefault();
@@ -60,6 +61,69 @@ FileUploader.prototype.addOnClickListeners = function() {
             this.menu.activateItem(target);
 
             this.filesOverview.load(hyperlink.href);
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            return;
+        }
+
+        // handle file edit and delete clicks
+        if (fileList !== null) {
+            if ($(target.parentNode).hasClass('edit')) {
+                if (this.popup.isActive()) {
+                    this.popup.remove();
+                }
+                var xhr = new CustomXMLHttpRequest();
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState < 4 || xhr.status !== 200) {
+                        return;
+                    }
+
+                    if (xhr.readyState === 4) {
+                        var result = JSON.parse(xhr.responseText);
+                        var popupElement = this.popup.show('file-info', result.html);
+                        popupElement.querySelector('input:first-child').focus();
+                    }
+                }.bind(this);
+
+                xhr.open('GET', target.href + '/json', true);
+                xhr.send();
+            }
+
+            if ($(target.parentNode).hasClass('delete')) {
+                if (this.popup.isActive()) {
+                    this.popup.remove();
+                }
+
+                var xhr = new CustomXMLHttpRequest();
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState < 4 || xhr.status !== 200) {
+                        return;
+                    }
+
+                    if (xhr.readyState === 4) {
+                        var result = JSON.parse(xhr.responseText);
+
+                        if (result.result == 'success') {
+                            var tableRow = $(target.parentNode).closestByTagName('tr');
+                            $(tableRow).fadeOut(function() {
+                                tableRow.parentNode.removeChild(tableRow);
+                            }, 75);
+                        } else {
+                            alert('error!');
+                        }
+                        /*
+                        var result = JSON.parse(xhr.responseText);
+                        var popupElement = this.popup.show('file-info', result.html);
+                        popupElement.querySelector('input:first-child').focus();
+                        */
+                    }
+                }.bind(this);
+
+                xhr.open('POST', target.href + '/json', true);
+                xhr.send();
+            }
 
             e.preventDefault();
             e.stopPropagation();

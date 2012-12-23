@@ -174,6 +174,22 @@ class File
     }
 
     /**
+     * Deletes a file from the filesystem
+     *
+     * @return boolean Whether the file is successfully deleted
+     */
+    public function delete()
+    {
+        @unlink($this->filename);
+
+        if (file_exists($this->filename)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Create a directory
      *
      * @param string $path The directory to create

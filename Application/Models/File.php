@@ -14,7 +14,8 @@
 namespace Application\Models;
 
 use Application\Models\User,
-    Application\Models\Tag;
+    Application\Models\Tag,
+    RichUploader\FileSystem\FileFactory;
 
 /**
  * Part of the model layer that takes of files on the system
@@ -43,17 +44,24 @@ class File
     private $tagModel;
 
     /**
+     * @var string The data directory
+     */
+    private $dataDirectory;
+
+    /**
      * Creates instance
      *
      * @param \PDO                                 $dbConnection  The database connection
      * @param \Application\Models\User             $userModel     The user model
      * @param \Application\Models\Tag              $tagModel      The tag model
+     * @param string                               $dataDirectory The directory in which all uploads are stored
      */
-    public function __construct(\PDO $dbConnection, User $userModel, Tag $tagModel)
+    public function __construct(\PDO $dbConnection, User $userModel, Tag $tagModel, $dataDirectory)
     {
         $this->dbConnection  = $dbConnection;
         $this->userModel     = $userModel;
         $this->tagModel      = $tagModel;
+        $this->dataDirectory = $dataDirectory;
     }
 
     /**
@@ -81,6 +89,34 @@ class File
     }
 
     /**
+     * Gets all the info about a file based on id
+     *
+     * @param int $uploadId The upload id
+     *
+     * @return array The file info
+     */
+    public function getFileById($uploadId)
+    {
+        $query = 'SELECT uploads.uploadid, uploads.filename, uploads.timestamp';
+        $query.= ' FROM uploads';
+        $query.= ' WHERE uploads.uploadid = :uploadid';
+
+        $stmt = $this->dbConnection->prepare($query);
+        $stmt->execute([
+            'uploadid' => $uploadId,
+        ]);
+
+        $recordset = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        if (!$recordset) {
+            return [];
+        }
+
+        $upload = $this->parseUploadsRecordset($recordset);
+        return reset($upload);
+    }
+
+    /**
      * Parses a recordset of uploads
      *
      * @param array $recordset The recordset to parse
@@ -100,5 +136,51 @@ class File
         }
 
         return $this->tagModel->getTagsOfUploadsRecordset($parsedRecordset);
+    }
+
+    /**
+     * Removes a file from the database and deletes the file when it is the only entry with this hash
+     *
+     * @param int                                  $uploadId    The id of the upload to be removed
+     * @param \RichUploader\FileSystem\FileFactory $fileFactory Interface of the file factory
+     *
+     * @return boolean Whether the removal was successful
+     */
+    public function deleteByid($uploadId, FileFactory $fileFactory)
+    {
+        $query = 'SELECT matches.uploadid, matches.filename, uploads.checksum';
+        $query.= ' FROM uploads';
+        $query.= ' LEFT JOIN uploads as matches ON uploads.checksum = matches.checksum';
+        $query.= ' WHERE uploads.uploadid = :uploadid';
+
+        $stmt = $this->dbConnection->prepare($query);
+        $stmt->execute([
+            'uploadid' => $uploadId,
+        ]);
+
+        $recordset = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        $this->dbConnection->beginTransaction();
+
+        $stmt = $this->dbConnection->prepare('DELETE FROM uploads WHERE uploadid = :uploadid');
+        $stmt->execute([
+            'uploadid' => $uploadId,
+        ]);
+
+        $result = true;
+        if (count($recordset) == 1) {
+            $fileInfo = new \SplFileInfo($recordset[0]['filename']);
+            $file = $fileFactory->build($this->dataDirectory . '/' . substr($recordset[0]['checksum'], 0, 2) . '/' . $recordset[0]['checksum'] . ($fileInfo->getExtension() ? '.' . $fileInfo->getExtension() : ''));
+
+            $result = $file->delete();
+        }
+
+        if ($result === true) {
+            $this->dbConnection->commit();
+            return true;
+        }
+
+        $this->dbConnection->rollBack();
+        return false;
     }
 }

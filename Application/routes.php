@@ -21,11 +21,14 @@ $routes = [
     ],
     'user/login/popup' => [
         'requirements' => [
-            'path'   => '#^(/login-popup/?)$#',
+            'path'   => '#^(/login-popup/?)(/json)?$#',
             'method' => 'get',
             'permissions' => [
                 'match' => 'guest',
             ],
+        ],
+        'mapping' => [
+            'json' => 1,
         ],
     ],
     'user/logout' => [
@@ -71,6 +74,46 @@ $routes = [
         ],
         'mapping' => [
             'json' => 1,
+        ],
+    ],
+    'user/uploads/file/edit' => [
+        'requirements' => [
+            'path' => '#^(/your-files/(\d+)/edit(/json)?/?)$#',
+            'method' => 'get',
+            'permissions' => [
+                'minimum' => 'user',
+            ],
+        ],
+        'mapping' => [
+            'id'   => 1,
+            'json' => 3,
+        ],
+    ],
+    'user/uploads/file/edit/update' => [
+        'requirements' => [
+            'path' => '#^(/your-files/(\d+)/edit(/json)?/?)$#',
+            'method' => 'post',
+            'permissions' => [
+                'minimum' => 'user',
+            ],
+        ],
+        'mapping' => [
+            'id'   => 1,
+            'json' => 3,
+        ],
+    ],
+    'user/uploads/file/delete' => [
+        'requirements' => [
+            'path' => '#^(/your-files/(\d+)/delete/(.*)(/json)?/?)$#',
+            'method' => 'post',
+            'permissions' => [
+                'minimum' => 'user',
+            ],
+        ],
+        'mapping' => [
+            'id'         => 1,
+            'csrf-token' => 3,
+            'json'       => 4,
         ],
     ],
 ];

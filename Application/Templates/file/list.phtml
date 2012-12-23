@@ -19,8 +19,8 @@
       <td class="access">Private</td>
       <td class="timestamp"><?php echo (new DateTime($file['timestamp']))->format('d-m-Y'); ?></td>
       <td class="downloads">9999999</td>
-      <td class="edit"><a href="#">Edit</a></td>
-      <td class="delete"><a href="#">Delete</a></td>
+      <td class="edit"><a href="/your-files/<?php echo $file['uploadid']; ?>/edit">Edit</a></td>
+      <td class="delete"><a href="/your-files/<?php echo $file['uploadid']; ?>/delete/<?php echo $this->templateVariables['csrfToken']; ?>">Delete</a></td>
     </tr>
   <?php } ?>
 </table>

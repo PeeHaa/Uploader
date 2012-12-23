@@ -1,0 +1,29 @@
+<form action="/your-files/<?php echo $this->templateVariables['fileInfo']['uploadid']; ?>/edit" method="post">
+  <input type="hidden" name="csrf-token" value="<?php echo $this->templateVariables['csrfToken']; ?>">
+  <table class="file-list-edit">
+    <tr>
+      <th>Original filename</th>
+      <td><input type="text" name="filename" value="<?php echo basename($this->templateVariables['fileInfo']['filename']); ?>" disabled="disabled"></td>
+    </tr>
+    <tr>
+      <th>Tags</th>
+      <td><input type="text" name="tags" value="<?php echo implode(' ', $this->templateVariables['fileInfo']['tags']); ?>"></td>
+    </tr>
+    <tr>
+      <th>Access</th>
+      <td>
+        <select name="access">
+          <option value="private">Private</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <th>Timestamp</th>
+      <td><input type="text" name="timestamp" value="<?php echo (new DateTime($this->templateVariables['fileInfo']['timestamp']))->format('d-m-Y'); ?>" disabled="disabled"></td>
+    </tr>
+    <tr>
+      <th>&nbsp;</th>
+      <td><input type="submit" name="submit" value="Save"></td>
+    </tr>
+  </table>
+</form>

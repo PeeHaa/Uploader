@@ -20,7 +20,8 @@ use RichUploader\Core\Autoloader,
     RichUploader\Security\CsrfToken,
     RichUploader\Security\CsrfToken\StorageMedium\Session as CsrfSession,
     RichUploader\Storage\Session,
-    RichUploader\Acl\Verifier;
+    RichUploader\Acl\Verifier,
+    RichUploader\FileSystem\FileFactory;
 
 /**
  * set up the limits for the upload process
@@ -137,10 +138,45 @@ switch (true) {
 
         $userModel  = new \Application\Models\User($dbConnection, $session);
         $tagModel   = new \Application\Models\Tag($dbConnection);
-        $fileModel  = new \Application\Models\File($dbConnection, $userModel, $tagModel);
-        $view       = new \Application\Views\Files\Overview($userModel, $fileModel, $request);
+        $fileModel  = new \Application\Models\File($dbConnection, $userModel, $tagModel, __DIR__ . '/data');
+        $view       = new \Application\Views\Files\Overview($userModel, $fileModel, $request, $csrfToken);
         $controller = new \Application\Controllers\File();
         $response   = $controller->overview($view);
+        break;
+
+    case $requestMatcher->doesMatch($routes['user/uploads/file/edit']['requirements']):
+        $request->setPathVariables($routes['user/uploads/file/edit']['mapping']);
+
+        $userModel  = new \Application\Models\User($dbConnection, $session);
+        $tagModel   = new \Application\Models\Tag($dbConnection);
+        $fileModel  = new \Application\Models\File($dbConnection, $userModel, $tagModel, __DIR__ . '/data');
+        $view       = new \Application\Views\Files\Edit($userModel, $fileModel, $request, $csrfToken);
+        $controller = new \Application\Controllers\File();
+        $response   = $controller->edit($view);
+        break;
+
+    case $requestMatcher->doesMatch($routes['user/uploads/file/edit/update']['requirements']):
+        $request->setPathVariables($routes['user/uploads/file/edit/update']['mapping']);
+
+        $userModel  = new \Application\Models\User($dbConnection, $session);
+        $tagModel   = new \Application\Models\Tag($dbConnection);
+        $fileModel  = new \Application\Models\File($dbConnection, $userModel, $tagModel, __DIR__ . '/data');
+        $view       = new \Application\Views\Files\Edit($userModel, $fileModel, $request);
+        $controller = new \Application\Controllers\File();
+        $response   = $controller->edit($view);
+        break;
+
+    case $requestMatcher->doesMatch($routes['user/uploads/file/delete']['requirements']):
+        $request->setPathVariables($routes['user/uploads/file/delete']['mapping']);
+
+        $fileFactory = new FileFactory();
+
+        $userModel  = new \Application\Models\User($dbConnection, $session);
+        $tagModel   = new \Application\Models\Tag($dbConnection);
+        $fileModel  = new \Application\Models\File($dbConnection, $userModel, $tagModel, __DIR__ . '/data');
+        $view       = new \Application\Views\Files\Delete($userModel, $fileModel, $request, $csrfToken, $fileFactory);
+        $controller = new \Application\Controllers\File();
+        $response   = $controller->delete($view);
         break;
 
     default:

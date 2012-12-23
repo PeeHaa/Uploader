@@ -1,0 +1,8 @@
+<?php
+
+$result = ['result' => 'failed'];
+if ($this->templateVariables['result'] === true) {
+    $result['result'] = 'success';
+}
+
+echo json_encode($result);
