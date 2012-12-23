@@ -127,6 +127,32 @@ DomHandler.prototype.closestByTagName = function(tagName) {
     }
 };
 
+DomHandler.prototype.fadeOut = function(callback, timeout) {
+    var opacity = this.domElement.style.opacity;
+
+    if (!this.domElement.style.opacity) {
+        opacity = 1;
+    }
+
+    opacity = Math.round(opacity * 100 ) / 100;
+
+    opacity -= 0.05;
+    if (opacity < 0) {
+        opacity = 0;
+    }
+
+    this.domElement.style.opacity = opacity;
+
+    if (opacity == 0) {
+        callback();
+        return;
+    }
+
+    setTimeout(function() {
+        this.fadeOut(callback, timeout);
+    }.bind(this), timeout);
+};
+
 /**
  * Crossbrowser event handler.
  * Inspired by the eventhandler script created by Martins Teresko (https://github.com/teresko)
