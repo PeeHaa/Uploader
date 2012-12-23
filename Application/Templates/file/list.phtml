@@ -10,7 +10,7 @@
   </tr>
   <?php foreach ($this->templateVariables['files'] as $file) { ?>
     <tr>
-      <td class="original-filename"><?php echo $file['filename']; ?></td>
+      <td class="original-filename"><?php echo basename(htmlspecialchars(urldecode($file['filename']))); ?></td>
       <td class="tags">
         <?php if ($file['tags']) foreach ($file['tags'] as $tag) { ?>
           <a href="#"><?php echo $tag; ?></a>
