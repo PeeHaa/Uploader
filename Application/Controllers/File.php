@@ -14,7 +14,11 @@
 namespace Application\Controllers;
 
 use Application\Views\Files\Overview,
+    Application\Views\Files\EditPopup,
     Application\Views\Files\Edit,
+    Application\Models\File as FileModel,
+    RichUploader\Http\RequestData,
+    RichUploader\Security\CsrfToken,
     Application\Views\Files\Delete;
 
 /**
@@ -41,11 +45,26 @@ class File
     /**
      * Sets up the file edit view
      *
-     * @param \Application\Views\Files\Edit $view         The file edit view
+     * @param \Application\Views\Files\EditPopup $view         The file edit view
      *
      * @return string The rendered view
      */
-    public function edit(Edit $view)
+    public function editPopup(EditPopup $view)
+    {
+        return $view;
+    }
+
+    /**
+     * Processes the edit of a file
+     *
+     * @param \Application\Views\Files\Edit  $view         The results view of the edit
+     * @param \RichUploader\Http\RequestData $request      The HTTP request data
+     * @param \Application\Models\File       $fileModel    The file model
+     * @param \RichUploader\Security\CsrfToken; $csrfToken The csrf token
+     *
+     * @return string The rendered result
+     */
+    public function edit(Edit $view, RequestData $request, FileModel $fileModel, CsrfToken $csrfToken)
     {
         return $view;
     }

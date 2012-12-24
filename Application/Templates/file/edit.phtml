@@ -2,24 +2,38 @@
   <input type="hidden" name="csrf-token" value="<?php echo $this->templateVariables['csrfToken']; ?>">
   <table class="file-list-edit">
     <tr>
-      <th>Original filename</th>
+      <th>Filename</th>
       <td><input type="text" name="filename" value="<?php echo basename($this->templateVariables['fileInfo']['filename']); ?>" disabled="disabled"></td>
     </tr>
     <tr>
-      <th>Tags</th>
-      <td><input type="text" name="tags" value="<?php echo implode(' ', $this->templateVariables['fileInfo']['tags']); ?>"></td>
+      <th>Name</th>
+      <td><input type="text" name="name" value=""></td>
+    </tr>
+    <tr>
+      <th>Description</th>
+      <td><textarea name="description"></textarea></td>
     </tr>
     <tr>
       <th>Access</th>
       <td>
         <select name="access">
           <option value="private">Private</option>
+          <option value="public">Public</option>
+          <option value="password">Password</option>
         </select>
       </td>
     </tr>
+    <tr class="password">
+      <th>Password</th>
+      <td><input type="password" name="password" value=""></td>
+    </tr>
+    <tr class="password">
+      <th>Retype password</th>
+      <td><input type="password" name="password2" value=""></td>
+    </tr>
     <tr>
-      <th>Timestamp</th>
-      <td><input type="text" name="timestamp" value="<?php echo (new DateTime($this->templateVariables['fileInfo']['timestamp']))->format('d-m-Y'); ?>" disabled="disabled"></td>
+      <th>Uploaded</th>
+      <td><input type="text" name="timestamp" value="<?php echo (new DateTime($this->templateVariables['fileInfo']['timestamp']))->format('d-m-Y H:i:s'); ?>" disabled="disabled"></td>
     </tr>
     <tr>
       <th>&nbsp;</th>

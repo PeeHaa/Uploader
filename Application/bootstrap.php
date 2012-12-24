@@ -137,8 +137,7 @@ switch (true) {
         $request->setPathVariables($routes['user/uploads']['mapping']);
 
         $userModel  = new \Application\Models\User($dbConnection, $session);
-        $tagModel   = new \Application\Models\Tag($dbConnection);
-        $fileModel  = new \Application\Models\File($dbConnection, $userModel, $tagModel, __DIR__ . '/data');
+        $fileModel  = new \Application\Models\File($dbConnection, $userModel,  __DIR__ . '/data');
         $view       = new \Application\Views\Files\Overview($userModel, $fileModel, $request, $csrfToken);
         $controller = new \Application\Controllers\File();
         $response   = $controller->overview($view);
@@ -148,22 +147,20 @@ switch (true) {
         $request->setPathVariables($routes['user/uploads/file/edit']['mapping']);
 
         $userModel  = new \Application\Models\User($dbConnection, $session);
-        $tagModel   = new \Application\Models\Tag($dbConnection);
-        $fileModel  = new \Application\Models\File($dbConnection, $userModel, $tagModel, __DIR__ . '/data');
-        $view       = new \Application\Views\Files\Edit($userModel, $fileModel, $request, $csrfToken);
+        $fileModel  = new \Application\Models\File($dbConnection, $userModel,  __DIR__ . '/data');
+        $view       = new \Application\Views\Files\EditPopup($userModel, $fileModel, $request, $csrfToken);
         $controller = new \Application\Controllers\File();
-        $response   = $controller->edit($view);
+        $response   = $controller->editPopup($view);
         break;
 
     case $requestMatcher->doesMatch($routes['user/uploads/file/edit/update']['requirements']):
         $request->setPathVariables($routes['user/uploads/file/edit/update']['mapping']);
 
         $userModel  = new \Application\Models\User($dbConnection, $session);
-        $tagModel   = new \Application\Models\Tag($dbConnection);
-        $fileModel  = new \Application\Models\File($dbConnection, $userModel, $tagModel, __DIR__ . '/data');
-        $view       = new \Application\Views\Files\Edit($userModel, $fileModel, $request);
+        $fileModel  = new \Application\Models\File($dbConnection, $userModel, __DIR__ . '/data');
+        $view       = new \Application\Views\Files\Edit($userModel, $fileModel, $request, $csrfToken);
         $controller = new \Application\Controllers\File();
-        $response   = $controller->edit($view);
+        $response   = $controller->edit($view, $request, $fileModel, $csrfToken);
         break;
 
     case $requestMatcher->doesMatch($routes['user/uploads/file/delete']['requirements']):
@@ -172,8 +169,7 @@ switch (true) {
         $fileFactory = new FileFactory();
 
         $userModel  = new \Application\Models\User($dbConnection, $session);
-        $tagModel   = new \Application\Models\Tag($dbConnection);
-        $fileModel  = new \Application\Models\File($dbConnection, $userModel, $tagModel, __DIR__ . '/data');
+        $fileModel  = new \Application\Models\File($dbConnection, $userModel, __DIR__ . '/data');
         $view       = new \Application\Views\Files\Delete($userModel, $fileModel, $request, $csrfToken, $fileFactory);
         $controller = new \Application\Controllers\File();
         $response   = $controller->delete($view);

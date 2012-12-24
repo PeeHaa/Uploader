@@ -14,7 +14,6 @@
 namespace Application\Models;
 
 use Application\Models\User,
-    Application\Models\Tag,
     RichUploader\FileSystem\FileFactory;
 
 /**
@@ -39,11 +38,6 @@ class File
     private $userModel;
 
     /**
-     * @var \Application\Models\Tag Instance of the tag model
-     */
-    private $tagModel;
-
-    /**
      * @var string The data directory
      */
     private $dataDirectory;
@@ -53,14 +47,12 @@ class File
      *
      * @param \PDO                                 $dbConnection  The database connection
      * @param \Application\Models\User             $userModel     The user model
-     * @param \Application\Models\Tag              $tagModel      The tag model
      * @param string                               $dataDirectory The directory in which all uploads are stored
      */
-    public function __construct(\PDO $dbConnection, User $userModel, Tag $tagModel, $dataDirectory)
+    public function __construct(\PDO $dbConnection, User $userModel, $dataDirectory)
     {
         $this->dbConnection  = $dbConnection;
         $this->userModel     = $userModel;
-        $this->tagModel      = $tagModel;
         $this->dataDirectory = $dataDirectory;
     }
 
@@ -71,11 +63,11 @@ class File
      */
     public function getFilesOfCurrentUser()
     {
-        $query = 'SELECT uploads.uploadid, uploads.filename, uploads.timestamp, count(downloads.downloadid) as downloadcount';
+        $query = 'SELECT uploads.uploadid, uploads.filename, uploads.timestamp, count(downloads.downloadid) as downloadcount, uploads.name, uploads.description';
         $query.= ' FROM uploads';
         $query.= ' LEFT JOIN downloads ON downloads.uploadid = uploads.uploadid';
         $query.= ' WHERE uploads.userid = :userid';
-        $query.= ' GROUP BY uploads.uploadid, uploads.filename, uploads.timestamp';
+        $query.= ' GROUP BY uploads.uploadid, uploads.filename, uploads.timestamp, uploads.name, uploads.description';
         $query.= ' ORDER BY uploads.uploadid DESC';
         $query.= ' LIMIT 10 OFFSET 0';
 
@@ -97,7 +89,7 @@ class File
      */
     public function getFileById($uploadId)
     {
-        $query = 'SELECT uploads.uploadid, uploads.filename, uploads.timestamp';
+        $query = 'SELECT uploads.uploadid, uploads.filename, uploads.timestamp, uploads.name, uploads.description';
         $query.= ' FROM uploads';
         $query.= ' WHERE uploads.uploadid = :uploadid';
 
@@ -131,11 +123,10 @@ class File
 
         $parsedRecordset = [];
         foreach ($recordset as $record) {
-            $record['tags'] = [];
             $parsedRecordset[$record['uploadid']] = $record;
         }
 
-        return $this->tagModel->getTagsOfUploadsRecordset($parsedRecordset);
+        return $parsedRecordset;
     }
 
     /**
@@ -182,5 +173,46 @@ class File
 
         $this->dbConnection->rollBack();
         return false;
+    }
+
+    /**
+     * Updates an upload
+     *
+     * @param array $formData The data from the form
+     *
+     * @return array With result
+     */
+    public function update($formData)
+    {
+        $result = [
+            'errors' => [],
+        ];
+        if ($formData['access'] == 'private') {
+            if ((!$formData['password'] || !$formData['password2']) || ($formData['password'] != $formData['password2'])) {
+                $result['errors'] = ['password', 'password2'];
+            }
+        }
+
+        $updateValues = [
+            'uploadid' => $formData['uploadid'],
+            'name' => $formData['name'],
+            'description' => $formData['name'],
+            'access' => $formData['access'],
+        ];
+
+        $query = 'UPDATE uploads';
+        $query.= ' SET name = :name,';
+        $query.= ' description = :description,';
+        if ($formData['access'] == 'password') {
+            $query.= ' password = :password,';
+            $updateValues['password'] = $formData['password'];
+        }
+        $query.= ' access = :access';
+        $query.= ' WHERE uploadid = :uploadid';
+
+        $stmt = $this->dbConnection->prepare($query);
+        $stmt->execute($updateValues);
+
+        return $result;
     }
 }
