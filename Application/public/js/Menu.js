@@ -5,6 +5,10 @@ function Menu() {
 }
 
 Menu.prototype.init = function() {
+    if (this.menuElement === null) {
+        return;
+    }
+
     var menuItems = this.menuElement.querySelectorAll('a');
     for (var i = 0, l = menuItems.length; i < l; i++) {
         if (menuItems[i].pathname == window.location.pathname) {
