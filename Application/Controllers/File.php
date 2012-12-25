@@ -66,6 +66,12 @@ class File
      */
     public function edit(Edit $view, RequestData $request, FileModel $fileModel, CsrfToken $csrfToken)
     {
+        if (!$csrfToken->validate($request->getPostVariable('csrf-token'))) {
+            $view->setResult(['errors' => ['csrf-token']]);
+        } else {
+            $view->setResult($fileModel->update($request->getPathVariable('id'), $request->getPostVariables()));
+        }
+
         return $view;
     }
 

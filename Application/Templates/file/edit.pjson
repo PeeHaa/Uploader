@@ -1,8 +1,3 @@
 <?php
 
-$response = [
-    'title' => $this->templateVariables['title'],
-    'html'  => $this->renderTemplate('file/edit.phtml'),
-];
-
-echo json_encode($response);
+echo json_encode($this->templateVariables['result']);

@@ -90,7 +90,7 @@ DomHandler.prototype.getFormValues = function() {
     for (var i = 0, length = this.domElement.elements.length; i < length; i++) {
         var element = this.domElement.elements[i];
 
-        if (element.tagName == 'TEXTAREA') {
+        if (element.tagName == 'TEXTAREA' || element.tagName == 'SELECT') {
             params[element.name] = element.value;
         } else if (element.tagName == 'INPUT') {
             if (element.type == 'text' || element.type == 'hidden' || element.type == 'password') {

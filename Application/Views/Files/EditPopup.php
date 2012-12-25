@@ -74,10 +74,10 @@ class EditPopup extends BaseView
     public function render()
     {
         if ($this->request->getPathVariable('json', false) === false) {
-            return $this->renderPage('file/edit.phtml');
+            return $this->renderPage('file/edit-popup.phtml');
         }
 
-        return $this->renderTemplate('file/edit.pjson');
+        return $this->renderTemplate('file/edit-popup.pjson');
     }
 
     /**

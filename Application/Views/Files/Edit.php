@@ -15,10 +15,7 @@
 namespace Application\Views\Files;
 
 use Application\Views\BaseView,
-    Application\Models\User,
-    Application\Models\File,
-    RichUploader\Http\RequestData,
-    RichUploader\Security\CsrfToken;
+    RichUploader\Http\RequestData;
 
 /**
  * Edit file view
@@ -31,39 +28,33 @@ use Application\Views\BaseView,
 class Edit extends BaseView
 {
     /**
-     * @var \Application\Models\UserModel The user model
-     */
-    private $userModel;
-
-    /**
-     * @var \Application\Models\FileModel The file model
-     */
-    private $fileModel;
-
-    /**
      * @var \RichUploader\Http\RequestData The request
      */
     private $request;
 
     /**
-     * @var \RichUploader\Security\CsrfToken The csrf token
+     * @var array The result of the form submit
      */
-    private $csrfToken;
+    private $result = [];
 
     /**
      * Creates instance
      *
-     * @param \Application\Models\UserModel    $userModel The user model
-     * @param \Application\Models\FileModel    $fileModel The file model
      * @param \RichUploader\Http\RequestData   $request   The request
-     * @param \RichUploader\Security\CsrfToken $csrfToken The csrf token
      */
-    public function __construct(User $userModel, File $fileModel, RequestData $request, CsrfToken $csrfToken)
+    public function __construct(RequestData $request)
     {
-        $this->userModel = $userModel;
-        $this->fileModel = $fileModel;
         $this->request   = $request;
-        $this->csrfToken = $csrfToken;
+    }
+
+    /**
+     * Sets the result of the form submit
+     *
+     * @param array $result The result of the form submit
+     */
+    public function setResult($result)
+    {
+        $this->result = $result;
     }
 
     /**
@@ -85,9 +76,6 @@ class Edit extends BaseView
      */
     protected function setTemplateVariables()
     {
-        $fileInfo = $this->fileModel->getFileById($this->request->getPathVariable('id'));
-        $this->templateVariables['title']     = 'Edit ' . $fileInfo['filename'] . ' - Your files';
-        $this->templateVariables['csrfToken'] = $this->csrfToken->getToken();
-        $this->templateVariables['fileInfo']  = $fileInfo;
+        $this->templateVariables['result'] = $this->result;
     }
 }

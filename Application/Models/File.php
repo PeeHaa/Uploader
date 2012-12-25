@@ -63,11 +63,12 @@ class File
      */
     public function getFilesOfCurrentUser()
     {
-        $query = 'SELECT uploads.uploadid, uploads.filename, uploads.timestamp, count(downloads.downloadid) as downloadcount, uploads.name, uploads.description';
+        $query = 'SELECT uploads.uploadid, uploads.filename, uploads.timestamp,';
+        $query.= ' count(downloads.downloadid) as downloadcount, uploads.name, uploads.description, uploads.access';
         $query.= ' FROM uploads';
         $query.= ' LEFT JOIN downloads ON downloads.uploadid = uploads.uploadid';
         $query.= ' WHERE uploads.userid = :userid';
-        $query.= ' GROUP BY uploads.uploadid, uploads.filename, uploads.timestamp, uploads.name, uploads.description';
+        $query.= ' GROUP BY uploads.uploadid, uploads.filename, uploads.timestamp, uploads.name, uploads.description, uploads.access';
         $query.= ' ORDER BY uploads.uploadid DESC';
         $query.= ' LIMIT 10 OFFSET 0';
 
@@ -89,7 +90,7 @@ class File
      */
     public function getFileById($uploadId)
     {
-        $query = 'SELECT uploads.uploadid, uploads.filename, uploads.timestamp, uploads.name, uploads.description';
+        $query = 'SELECT uploads.uploadid, uploads.filename, uploads.timestamp, uploads.name, uploads.description, uploads.access';
         $query.= ' FROM uploads';
         $query.= ' WHERE uploads.uploadid = :uploadid';
 
@@ -178,23 +179,31 @@ class File
     /**
      * Updates an upload
      *
+     * @param int   $uploadId The id of the upload to update
      * @param array $formData The data from the form
      *
      * @return array With result
      */
-    public function update($formData)
+    public function update($uploadId, $formData)
     {
+        $file = $this->getFileById($uploadId);
+
         $result = [
             'errors' => [],
         ];
-        if ($formData['access'] == 'private') {
-            if ((!$formData['password'] || !$formData['password2']) || ($formData['password'] != $formData['password2'])) {
-                $result['errors'] = ['password', 'password2'];
+
+        if ($formData['access'] == 'password') {
+            if ($formData['password'] != $formData['password2']) {
+                return ['errors' => ['password', 'password2']];
+            }
+
+            if ($file['access'] != 'password' && (!$formData['password'] || !$formData['password2'])) {
+                return ['errors' => ['password', 'password2']];
             }
         }
 
         $updateValues = [
-            'uploadid' => $formData['uploadid'],
+            'uploadid' => $uploadId,
             'name' => $formData['name'],
             'description' => $formData['name'],
             'access' => $formData['access'],
@@ -203,9 +212,9 @@ class File
         $query = 'UPDATE uploads';
         $query.= ' SET name = :name,';
         $query.= ' description = :description,';
-        if ($formData['access'] == 'password') {
+        if ($formData['access'] == 'password' && $formData['password']) {
             $query.= ' password = :password,';
-            $updateValues['password'] = $formData['password'];
+            $updateValues['password'] = password_hash($formData['password'], PASSWORD_DEFAULT);
         }
         $query.= ' access = :access';
         $query.= ' WHERE uploadid = :uploadid';

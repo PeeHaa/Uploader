@@ -32,7 +32,7 @@ FilesOverview.prototype.showEditPopup = function(popup, url) {
 
             var editForm = popupElement.getElementsByTagName('form')[0];
             $(editForm).on('submit', function(e) {
-                this.edit(editForm);
+                this.edit(editForm, popup);
 
                 e.preventDefault();
                 e.stopPropagation();
@@ -50,12 +50,8 @@ FilesOverview.prototype.setDisplay = function(domElements, value) {
     }
 };
 
-FilesOverview.prototype.edit = function(form) {
+FilesOverview.prototype.edit = function(form, popup) {
     var formValues = $(form).getFormValues();
-
-    if (formValues['access'] == 'password' && (!formValues['password'] || !formValues['password2'])) {
-        return;
-    }
 
     var xhr = new CustomXMLHttpRequest();
     xhr.onreadystatechange = function() {
@@ -66,10 +62,11 @@ FilesOverview.prototype.edit = function(form) {
         if (xhr.readyState === 4) {
             var data = JSON.parse(xhr.responseText);
 
-            if (typeof data.result === 'undefined' || data.result != 'success') {
-                this.invalidateForm(form, data.result);
-             } else {
-                location.reload(true);
+            if (typeof data.errors === 'undefined' || data.errors.length) {
+                this.invalidateForm(form, data.errors);
+            } else {
+                this.updateView(form);
+                popup.remove();
             }
         }
     }.bind(this);
@@ -77,6 +74,38 @@ FilesOverview.prototype.edit = function(form) {
     xhr.open(form.method, form.action + '/json', true);
     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xhr.send(formValues.buildQueryString());
+};
+
+FilesOverview.prototype.invalidateForm = function(form, errors) {
+    var password  = form.querySelector('input[name="password"]'),
+        password2 = form.querySelector('input[name="password2"]');
+
+    if (errors.indexOf('password') != -1 && !$(password).hasClass('error')) {
+        $(password).addClass('error');
+    }
+
+    if (errors.indexOf('password2') != -1 && !$(password2).hasClass('error')) {
+        $(password2).addClass('error');
+    }
+
+    password.value = '';
+    password2.value = '';
+
+    password.blur();
+    password2.blur();
+};
+
+FilesOverview.prototype.updateView = function(form) {
+    var name        = form.querySelector('[name=name]').value,
+        description = form.querySelector('[name=description]').value,
+        access      = form.querySelector('[name=access]').options[form.querySelector('[name=access]').selectedIndex].text,
+        id          = form.querySelector('[name=id]').value;
+
+    var row = document.querySelector('tr[data-id="' + id + '"]');
+
+    row.querySelector('.name').innerText = name;
+    row.querySelector('.description').innerText = description;
+    row.querySelector('.access').innerText = access;
 };
 
 FilesOverview.prototype.deleteFile = function() {
