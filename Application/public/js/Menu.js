@@ -1,8 +1,18 @@
 function Menu() {
-    var header = document.getElementById('header');
+    this.menuElement = document.getElementById('header').querySelector('ul.btn-group');
 
-    this.menuElement = header.querySelector('ul.btn-group');
+    this.init();
 }
+
+Menu.prototype.init = function() {
+    var menuItems = this.menuElement.querySelectorAll('a');
+    for (var i = 0, l = menuItems.length; i < l; i++) {
+        if (menuItems[i].pathname == window.location.pathname) {
+            this.deactivateAll();
+            this.activateItem(menuItems[i]);
+        }
+    }
+};
 
 Menu.prototype.deactivateAll = function() {
     var elements = this.menuElement.querySelectorAll('li');
