@@ -175,6 +175,32 @@ switch (true) {
         $response   = $controller->delete($view);
         break;
 
+    case $requestMatcher->doesMatch($routes['download/user']['requirements']):
+        $request->setPathVariables($routes['download/user']['mapping']);
+
+        $fileFactory = new FileFactory();
+
+        $userModel     = new \Application\Models\User($dbConnection, $session);
+        $fileModel     = new \Application\Models\File($dbConnection, $userModel, __DIR__ . '/data');
+        $downloadModel = new \Application\Models\Download($dbConnection, $userModel, $fileModel, $fileFactory, __DIR__ . '/data');
+        $view          = new \Application\Views\Files\Download($request, $downloadModel, $userModel);
+        $controller    = new \Application\Controllers\File();
+        $response      = $controller->download($view);
+        break;
+
+    case $requestMatcher->doesMatch($routes['download/id']['requirements']):
+        $request->setPathVariables($routes['download/id']['mapping']);
+
+        $fileFactory = new FileFactory();
+
+        $userModel     = new \Application\Models\User($dbConnection, $session);
+        $fileModel     = new \Application\Models\File($dbConnection, $userModel, __DIR__ . '/data');
+        $downloadModel = new \Application\Models\Download($dbConnection, $userModel, $fileModel, $fileFactory, __DIR__ . '/data');
+        $view          = new \Application\Views\Files\Download($request, $downloadModel, $userModel);
+        $controller    = new \Application\Controllers\File();
+        $response      = $controller->download($view);
+        break;
+
     default:
         // 404
         break;

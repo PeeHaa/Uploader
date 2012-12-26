@@ -341,7 +341,7 @@ input[disabled="disabled"] {
     color: #cccccc;
 }
 
-table.file-list {
+table.file-list, table.file-info {
     background: white;
     margin-top: 50px;
     border-collapse: collapse;
@@ -432,6 +432,27 @@ table.file-list-edit textarea {
 
 table.file-list-edit input[type="submit"] {
     float: right;
+}
+
+h2.download, h3.download, p.download {
+    text-align: center;
+}
+
+table.file-info {
+    width: 450px;
+    margin: 0 auto;
+}
+
+table.file-info td, table.file-info th {
+    padding: 8px;
+    line-height: 20px;
+    text-align: left;
+    vertical-align: top;
+    border-top: 1px solid #dddddd;
+}
+
+table.file-info tr.first td, table.file-info tr.first th {
+    border-top: none;
 }
 
 .qq-uploader {

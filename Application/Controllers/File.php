@@ -19,7 +19,8 @@ use Application\Views\Files\Overview,
     Application\Models\File as FileModel,
     RichUploader\Http\RequestData,
     RichUploader\Security\CsrfToken,
-    Application\Views\Files\Delete;
+    Application\Views\Files\Delete,
+    Application\Views\Files\Download;
 
 /**
  * User controller
@@ -83,6 +84,18 @@ class File
      * @return string The rendered view
      */
     public function delete(Delete $view)
+    {
+        return $view;
+    }
+
+    /**
+     * Downloads the file
+     *
+     * @param \Application\Views\Files\Download $view The download file view
+     *
+     * @return string The rendered view
+     */
+    public function download(Download $view)
     {
         return $view;
     }

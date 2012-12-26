@@ -1,0 +1,25 @@
+<h2 class="download">Starting download</h2>
+<p class="download">Your download of <?php echo htmlspecialchars(basename($this->templateVariables['file']['filename']), ENT_QUOTES, 'UTF-8'); ?> will start.</p>
+<h3 class="download">File information</h3>
+<table class="file-info">
+  <tr class="first">
+    <th>Filename</th>
+    <td><?php echo htmlspecialchars(basename($this->templateVariables['file']['filename']), ENT_QUOTES, 'UTF-8'); ?></td>
+  </tr>
+  <tr>
+    <th>Checksum</th>
+    <td><?php echo $this->templateVariables['file']['checksum']; ?></td>
+  </tr>
+  <tr>
+    <th>Name</th>
+    <td><?php echo htmlspecialchars($this->templateVariables['file']['name'], ENT_QUOTES, 'UTF-8'); ?></td>
+  </tr>
+  <tr>
+    <th>Description</th>
+    <td><?php echo htmlspecialchars($this->templateVariables['file']['description'], ENT_QUOTES, 'UTF-8'); ?></td>
+  </tr>
+  <tr>
+    <th>Size</th>
+    <td><?php echo $this->templateVariables['file']['size']; ?></td>
+  </tr>
+</table>
