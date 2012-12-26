@@ -45,9 +45,9 @@ class Download extends BaseView
     private $userModel;
 
     /**
-     * @var array The file to be downloaded
+     * @var array The info of the downloaded
      */
-    private $file = null;
+    private $downloadInfo = null;
 
     /**
      * @var array The errors
@@ -75,10 +75,9 @@ class Download extends BaseView
      */
     public function render()
     {
-        $download = $this->downloadModel->getFileForDownload($this->request->getPathVariable('id'));
-        $this->file = $download['file'];
+        $this->downloadInfo = $this->downloadModel->getFileForDownload($this->request->getPathVariable('id'));
 
-        switch ($download['action']) {
+        switch ($this->downloadInfo['action']) {
             case 'needs-login':
                 break;
 
@@ -106,9 +105,29 @@ class Download extends BaseView
      */
     protected function setTemplateVariables()
     {
-        $this->templateVariables['title']          = 'Downloading file: ' . basename($this->file['filename']);
+        switch ($this->downloadInfo['action']) {
+            case 'needs-login':
+                $this->templateVariables['title'] = 'Login';
+                break;
+
+            case 'access-denied':
+                $this->templateVariables['title'] = 'Access denied';
+                break;
+
+            case 'requires-password':
+                $this->templateVariables['title'] = 'Provide password';
+                break;
+
+            case null:
+            default:
+                $this->templateVariables['title'] = 'Downloading file: ' . basename($this->downloadInfo['file']['filename']);
+                break;
+        }
+
         $this->templateVariables['isUserLoggedIn'] = $this->userModel->isLoggedIn();
-        $this->templateVariables['file']           = $this->file;
-        $this->templateVariables['download']       = $this->file['uploadid'];
+        $this->templateVariables['file']           = $this->downloadInfo['file'];
+        if ($this->downloadInfo['action'] === null) {
+            $this->templateVariables['download']       = $this->file['uploadid'];
+        }
     }
 }

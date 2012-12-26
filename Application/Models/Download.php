@@ -90,9 +90,9 @@ class Download
 
         switch($file['access']) {
             case 'private':
-                if ($userModel->getLoggedInUserId() === false) {
+                if ($this->userModel->getLoggedInUserId() === false) {
                     $return['action'] = 'needs-login';
-                } elseif ($file['userid'] != $userModel->getLoggedInUserId()) {
+                } elseif ($file['userid'] != $this->userModel->getLoggedInUserId()) {
                     $return['action'] = 'access-denied';
                 }
                 break;
