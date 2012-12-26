@@ -1,5 +1,6 @@
 function Popup() {
     this.activeType = null;
+    this.allowClosing = true;
 
     this.init();
 }
@@ -9,7 +10,7 @@ Popup.prototype.init = function() {
         var content = this.get().innerHTML;
         this.get().remove();
 
-        this.show('requires-password', content);
+        this.show('requires-password', content, false);
     }
 };
 
@@ -23,8 +24,11 @@ Popup.prototype.isActive = function(type) {
     return true;
 };
 
-Popup.prototype.show = function(type, content) {
+Popup.prototype.show = function(type, content, allowClosing) {
     this.activeType = type;
+    if (typeof allowClosing !== 'undefined') {
+        this.allowClosing = allowClosing;
+    }
 
     var body  = document.getElementsByTagName('body')[0],
         popup = document.createElement('div');
@@ -40,10 +44,14 @@ Popup.prototype.show = function(type, content) {
     return popup;
 };
 
-Popup.prototype.remove = function() {
+Popup.prototype.remove = function(force) {
     var popup = this.get();
 
     if (popup === null) {
+        return;
+    }
+
+    if (this.allowClosing === false && (typeof force === 'undefined' || force !== true)) {
         return;
     }
 
