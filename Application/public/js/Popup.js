@@ -1,6 +1,17 @@
 function Popup() {
     this.activeType = null;
+
+    this.init();
 }
+
+Popup.prototype.init = function() {
+    if (this.isActive()) {
+        var content = this.get().innerHTML;
+        this.get().remove();
+
+        this.show('requires-password', content);
+    }
+};
 
 Popup.prototype.isActive = function(type) {
     var popup = this.get();

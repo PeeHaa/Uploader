@@ -455,6 +455,10 @@ table.file-info tr.first td, table.file-info tr.first th {
     border-top: none;
 }
 
+form.password input[type="password"] {
+    width: 335px;
+}
+
 .qq-uploader {
     position: relative;
     width: 100%;
