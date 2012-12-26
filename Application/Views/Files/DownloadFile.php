@@ -27,7 +27,7 @@ use Application\Views\BaseView,
  * @subpackage Files
  * @author     Pieter Hordijk <info@pieterhordijk.com>
  */
-class Download extends BaseView
+class DownloadFile extends BaseView
 {
     /**
      * @var \RichUploader\Http\RequestData The request
@@ -70,14 +70,23 @@ class Download extends BaseView
      */
     public function render()
     {
+        if ($this->downloadModel->hasUserAccess($this->request->getPathVariable('id')) === true) {
+            $file = $this->downloadModel->download($this->request->getPathVariable('id'));
+
+            header('Content-Type: application/octet-stream');
+            header('Content-Transfer-Encoding: Binary');
+            header('Content-disposition: attachment; filename="' . basename($file['filename']) . '"');
+            readfile($file['full_path']);
+        } else {
+            // the shit hits the fan
+        }
+return;
+
         // check privileges and whether file exists
         /*
         $file_name = 'file.exe';
         $file_url = 'http://www.myremoteserver.com/' . $file_name;
-        header('Content-Type: application/octet-stream');
-        header("Content-Transfer-Encoding: Binary");
-        header("Content-disposition: attachment; filename=\"".$file_name."\"");
-        readfile($file_url);
+
         */
 
         $download = $this->downloadModel->getFileForDownload($this->request->getPathVariable('id'));

@@ -134,4 +134,13 @@ $routes = [
             'id' => 1,
         ],
     ],
+    'download/file' => [
+        'requirements' => [
+            'path' => '#^(/download-file/(\d+))$#',
+            'method' => 'get',
+        ],
+        'mapping' => [
+            'id' => 1,
+        ],
+    ],
 ];

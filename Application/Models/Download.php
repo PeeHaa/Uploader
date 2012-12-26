@@ -100,6 +100,28 @@ class Download
     }
 
     /**
+     * Gets the information about a file to download and updates the download stats
+     *
+     * @param int $id The id of the download
+     *
+     * @return array The download info
+     */
+    public function download($id)
+    {
+        $file = $this->fileModel->getFileById($id);
+        $file['full_path'] = $this->fileModel->getFullPath($file['checksum'], $file['filename']);
+
+        $stmt = $this->dbConnection->prepare('INSERT INTO downloads (uploadid, ip) VALUES (:uploadid, :ip)');
+        $stmt->execute([
+            'uploadid' => $id,
+            'ip' => $_SERVER['REMOTE_ADDR'],
+        ]);
+
+        return $file;
+    }
+
+
+    /**
      * Gets the size of a file
      *
      * @param string $checksum The checksum of the file
@@ -112,5 +134,29 @@ class Download
         $file = $this->fileFactory->build($this->fileModel->getFullPath($checksum, $filename));
 
         return $file->getSize();
+    }
+
+    /**
+     * Check whether the user has access to the file
+     *
+     * @param int $id The id of the file
+     *
+     * @return boolean Whether the user is allowed to access the file
+     */
+    public function hasUserAccess($id)
+    {
+        $file = $this->fileModel->getFileById($id);
+
+        if ($file['access'] == 'public') {
+            return true;
+        }
+
+        if ($file['access'] == 'private' && $file['userid'] == $this->userModel->getLoggedInUserId()) {
+            return true;
+        }
+
+        // implement password protected download
+
+        return false;
     }
 }

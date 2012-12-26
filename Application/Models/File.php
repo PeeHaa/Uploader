@@ -90,7 +90,7 @@ class File
      */
     public function getFileById($uploadId)
     {
-        $query = 'SELECT uploads.uploadid, uploads.filename, uploads.timestamp, uploads.name, uploads.description, uploads.access, uploads.checksum';
+        $query = 'SELECT uploads.uploadid, uploads.userid, uploads.filename, uploads.timestamp, uploads.name, uploads.description, uploads.access, uploads.checksum';
         $query.= ' FROM uploads';
         $query.= ' WHERE uploads.uploadid = :uploadid';
 

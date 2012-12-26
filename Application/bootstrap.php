@@ -201,6 +201,19 @@ switch (true) {
         $response      = $controller->download($view);
         break;
 
+    case $requestMatcher->doesMatch($routes['download/file']['requirements']):
+        $request->setPathVariables($routes['download/file']['mapping']);
+
+        $fileFactory = new FileFactory();
+
+        $userModel     = new \Application\Models\User($dbConnection, $session);
+        $fileModel     = new \Application\Models\File($dbConnection, $userModel, __DIR__ . '/data');
+        $downloadModel = new \Application\Models\Download($dbConnection, $userModel, $fileModel, $fileFactory, __DIR__ . '/data');
+        $view          = new \Application\Views\Files\DownloadFile($request, $downloadModel, $userModel);
+        $controller    = new \Application\Controllers\File();
+        $response      = $controller->downloadFile($view);
+        break;
+
     default:
         // 404
         break;

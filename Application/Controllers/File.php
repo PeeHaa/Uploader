@@ -20,7 +20,8 @@ use Application\Views\Files\Overview,
     RichUploader\Http\RequestData,
     RichUploader\Security\CsrfToken,
     Application\Views\Files\Delete,
-    Application\Views\Files\Download;
+    Application\Views\Files\Download,
+    Application\Views\Files\DownloadFile;
 
 /**
  * User controller
@@ -89,13 +90,25 @@ class File
     }
 
     /**
-     * Downloads the file
+     * Displays the download page
      *
      * @param \Application\Views\Files\Download $view The download file view
      *
      * @return string The rendered view
      */
     public function download(Download $view)
+    {
+        return $view;
+    }
+
+    /**
+     * Downloads the file
+     *
+     * @param \Application\Views\Files\DownloadFile $view The download file view
+     *
+     * @return string The rendered view
+     */
+    public function downloadFile(DownloadFile $view)
     {
         return $view;
     }
