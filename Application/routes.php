@@ -116,4 +116,22 @@ $routes = [
             'json'       => 4,
         ],
     ],
+    'download/user' => [
+        'requirements' => [
+            'path' => '#^(/download/(.*)/(\d+)(/.*)?/?)$#',
+            'method' => 'get',
+        ],
+        'mapping' => [
+            'id' => 2,
+        ],
+    ],
+    'download/id' => [
+        'requirements' => [
+            'path' => '#^(/download/(\d+)(/.*)?/?)$#',
+            'method' => 'get',
+        ],
+        'mapping' => [
+            'id' => 1,
+        ],
+    ],
 ];
