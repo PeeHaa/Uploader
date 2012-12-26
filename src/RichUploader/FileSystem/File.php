@@ -202,4 +202,14 @@ class File
             throw new \DomainException('Directory (`' . $path . '`) could not be created.');
         }
     }
+
+    /**
+     * Gets the size of the file
+     *
+     * @return int The size of the file in bytes
+     */
+    public function getSize()
+    {
+        return filesize($this->filename);
+    }
 }
