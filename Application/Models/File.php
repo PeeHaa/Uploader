@@ -90,7 +90,7 @@ class File
      */
     public function getFileById($uploadId)
     {
-        $query = 'SELECT uploads.uploadid, uploads.filename, uploads.timestamp, uploads.name, uploads.description, uploads.access';
+        $query = 'SELECT uploads.uploadid, uploads.filename, uploads.timestamp, uploads.name, uploads.description, uploads.access, uploads.checksum';
         $query.= ' FROM uploads';
         $query.= ' WHERE uploads.uploadid = :uploadid';
 
@@ -162,7 +162,7 @@ class File
         $result = true;
         if (count($recordset) == 1) {
             $fileInfo = new \SplFileInfo($recordset[0]['filename']);
-            $file = $fileFactory->build($this->dataDirectory . '/' . substr($recordset[0]['checksum'], 0, 2) . '/' . $recordset[0]['checksum'] . ($fileInfo->getExtension() ? '.' . $fileInfo->getExtension() : ''));
+            $file = $fileFactory->build($this->getFullPath($recordset[0]['filename'], $recordset[0]['checksum']));
 
             $result = $file->delete();
         }
@@ -174,6 +174,26 @@ class File
 
         $this->dbConnection->rollBack();
         return false;
+    }
+
+    /**
+     * Gets the full path of a file
+     *
+     * @param string $checksum The checksum of the file
+     * @param string $filename The filename
+     *
+     * @return string The full path of a file
+     */
+    public function getFullPath($checksum, $filename)
+    {
+        $fileInfo = new \SplFileInfo($filename);
+
+        $extension = '';
+        if ($fileInfo->getExtension()) {
+            $extension = '.' . $fileInfo->getExtension();
+        }
+
+        return $this->dataDirectory . '/' . substr($checksum, 0, 2) . '/' . $checksum . $extension;
     }
 
     /**
