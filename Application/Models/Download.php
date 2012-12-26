@@ -82,21 +82,30 @@ class Download
 
         $file['size'] = $this->getFileSize($file['checksum'], $file['filename']);
 
+        $return = [
+            'access' => $file['access'],
+            'file'   => $file,
+            'action' => null,
+        ];
+
         switch($file['access']) {
             case 'private':
-                //$this->userModel->getLoggedInUserId();
+                if ($userModel->getLoggedInUserId() === false) {
+                    $return['action'] = 'needs-login';
+                } elseif ($file['userid'] != $userModel->getLoggedInUserId()) {
+                    $return['action'] = 'access-denied';
+                }
+                break;
+
+            case 'password':
+                $return['action'] = 'requires-password';
                 break;
 
             case 'public':
-                return [
-                    'errors' => false,
-                    'access' => 'public',
-                    'file'   => $file,
-                ];
-
-            case 'password':
                 break;
         }
+
+        return $return;
     }
 
     /**

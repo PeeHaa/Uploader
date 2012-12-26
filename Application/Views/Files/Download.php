@@ -45,9 +45,14 @@ class Download extends BaseView
     private $userModel;
 
     /**
-     * @var The file to be downloaded
+     * @var array The file to be downloaded
      */
     private $file = null;
+
+    /**
+     * @var array The errors
+     */
+    private $errors = [];
 
     /**
      * Creates instance Application\Models\Download
@@ -70,31 +75,30 @@ class Download extends BaseView
      */
     public function render()
     {
-        // check privileges and whether file exists
-        /*
-        $file_name = 'file.exe';
-        $file_url = 'http://www.myremoteserver.com/' . $file_name;
-        header('Content-Type: application/octet-stream');
-        header("Content-Transfer-Encoding: Binary");
-        header("Content-disposition: attachment; filename=\"".$file_name."\"");
-        readfile($file_url);
-        */
-
         $download = $this->downloadModel->getFileForDownload($this->request->getPathVariable('id'));
+        $this->file = $download['file'];
 
-        if ($download['errors'] === false) {
-            $this->file = $download['file'];
+        switch ($download['action']) {
+            case 'needs-login':
+                break;
 
-            switch($download['access'] == 'public') {
+            case 'access-denied':
+                if ($this->request->getPathVariable('json', false) === false) {
+                    return $this->renderPage('file/download-denied.phtml');
+                }
 
-            }
+                return $this->renderTemplate('file/download-denied.pjson');
+
+            case 'requires-password':
+                break;
+
+            case null:
+                if ($this->request->getPathVariable('json', false) === false) {
+                    return $this->renderPage('file/download.phtml');
+                }
+
+                return $this->renderTemplate('file/download.pjson');
         }
-
-        if ($this->request->getPathVariable('json', false) === false) {
-            return $this->renderPage('file/download.phtml');
-        }
-
-        return $this->renderTemplate('file/download.pjson');
     }
 
     /**
