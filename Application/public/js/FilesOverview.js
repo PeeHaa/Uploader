@@ -108,7 +108,7 @@ FilesOverview.prototype.updateView = function(form) {
     row.querySelector('.access').innerText = access;
 };
 
-FilesOverview.prototype.deleteFile = function() {
+FilesOverview.prototype.deleteFile = function(url) {
     var xhr = new CustomXMLHttpRequest();
     xhr.onreadystatechange = function() {
         if (xhr.readyState < 4 || xhr.status !== 200) {
