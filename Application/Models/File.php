@@ -244,4 +244,54 @@ class File
 
         return $result;
     }
+
+    /**
+     * Verfies a password of a password protected file
+     *
+     * @param int $uploadId The id of the file
+     * @param string The user supplied password to verify
+     *
+     * @return boolean Whether the supplied password is valid
+     */
+    public function verifyPassword($uploadId, $password)
+    {
+        $stmt = $this->dbConnection->prepare('SELECT password FROM uploads WHERE uploadid = :uploadid');
+        $stmt->execute([
+            'uploadid' => $uploadId,
+        ]);
+
+        $recordset = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if (!$recordset || !password_verify($password, $recordset['password'])) {
+            return false;
+        }
+
+        $this->reHashWhenNeeded($uploadId, $password, $recordset['password']);
+
+        return true;
+    }
+
+    /**
+     * Check whether the provided hash still uses the safest algorithm
+     *
+     * @param int    $uploadId The file id to which the hash and password belongs
+     * @param string $password The password to rehash when needed
+     * @param string $hash     The current hash
+     */
+    private function reHashWhenNeeded($uploadId, $password, $hash)
+    {
+        if (password_needs_rehash($hash, PASSWORD_DEFAULT)) {
+            $hash = password_hash($password, PASSWORD_DEFAULT);
+
+            if ($hash === false) {
+                return;
+            }
+
+            $stmt = $this->dbConnection->prepare('UPDATE uploads SET hash = :hash WHERE uploadid = :uploadid');
+            $stmt->execute([
+                'hash'   => $hash,
+                'uploadid' => $uploadId,
+            ]);
+        }
+    }
 }
