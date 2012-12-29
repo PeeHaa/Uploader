@@ -132,7 +132,7 @@ class Download extends BaseView
         $this->templateVariables['isUserLoggedIn'] = $this->userModel->isLoggedIn();
         $this->templateVariables['file']           = $this->downloadInfo['file'];
         if ($this->downloadInfo['action'] === null) {
-            $this->templateVariables['download']       = $this->file['uploadid'];
+            $this->templateVariables['download']       = $this->downloadInfo['file']['uploadid'];
         }
     }
 }
