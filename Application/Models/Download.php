@@ -15,7 +15,8 @@ namespace Application\Models;
 
 use Application\Models\User,
     RichUploader\FileSystem\FileFactory,
-    Application\Models\File;
+    Application\Models\File,
+    RichUploader\Storage\SessionInterface;
 
 /**
  * Part of the model layer that takes care of downloads
@@ -148,23 +149,30 @@ class Download
     /**
      * Check whether the user has access to the file
      *
-     * @param int $id The id of the file
+     * @param int                                    $id      The id of the file
+     * @param \RichUploader\Storage\SessionInterface $session The session
      *
      * @return boolean Whether the user is allowed to access the file
      */
-    public function hasUserAccess($id)
+    public function hasUserAccess($id, SessionInterface $session)
     {
         $file = $this->fileModel->getFileById($id);
+
+        if ($file['userid'] == $this->userModel->getLoggedInUserId()) {
+            return true;
+        }
 
         if ($file['access'] == 'public') {
             return true;
         }
 
-        if ($file['access'] == 'private' && $file['userid'] == $this->userModel->getLoggedInUserId()) {
-            return true;
-        }
+        if ($file['access'] == 'password' && $session->isKeyValid('fileAccessList')) {
+            $fileAccessList = $session->get('fileAccessList');
 
-        // implement password protected download
+            if ($fileAccessList[$id] === true) {
+                return true;
+            }
+        }
 
         return false;
     }

@@ -3,6 +3,7 @@ function FileUploader() {
 
     this.popup          = new Popup();
     this.authentication = new Authentication();
+    this.download       = new Download();
     this.fixHeight      = new FixHeight();
     this.menu           = new Menu();
     this.page           = new Page(this);
@@ -104,6 +105,16 @@ FileUploader.prototype.addOnSubmitListeners = function() {
         // handle login
         if ($(target).hasClass('login')) {
             this.authentication.login(target);
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            return;
+        }
+
+        // handle password protected file
+        if ($(target).hasClass('password')) {
+            this.download.verifyPassword(target);
 
             e.preventDefault();
             e.stopPropagation();

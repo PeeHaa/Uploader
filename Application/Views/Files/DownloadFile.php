@@ -17,7 +17,8 @@ namespace Application\Views\Files;
 use Application\Views\BaseView,
     RichUploader\Http\RequestData,
     Application\Models\Download as DownloadModel,
-    Application\Models\User;
+    Application\Models\User,
+    RichUploader\Storage\SessionInterface;
 
 /**
  * Download file view
@@ -45,6 +46,11 @@ class DownloadFile extends BaseView
     private $userModel;
 
     /**
+     * @var \RichUploader\Storage\SessionInterface The session
+     */
+    private $session;
+
+    /**
      * @var The file to be downloaded
      */
     private $file = null;
@@ -52,15 +58,17 @@ class DownloadFile extends BaseView
     /**
      * Creates instance Application\Models\Download
      *
-     * @param \RichUploader\Http\RequestData $request       The request
-     * @param \Application\Models\Download   $downloadModel The download model
-     * @param \Application\Models\User       $userModel     The user model
+     * @param \RichUploader\Http\RequestData         $request       The request
+     * @param \Application\Models\Download           $downloadModel The download model
+     * @param \Application\Models\User               $userModel     The user model
+     * @param \RichUploader\Storage\SessionInterface $session       The session
      */
-    public function __construct(RequestData $request, DownloadModel $downloadModel, User $userModel)
+    public function __construct(RequestData $request, DownloadModel $downloadModel, User $userModel, SessionInterface $session)
     {
         $this->request       = $request;
         $this->downloadModel = $downloadModel;
         $this->userModel     = $userModel;
+        $this->session       = $session;
     }
 
     /**
@@ -70,7 +78,7 @@ class DownloadFile extends BaseView
      */
     public function render()
     {
-        if ($this->downloadModel->hasUserAccess($this->request->getPathVariable('id')) === true) {
+        if ($this->downloadModel->hasUserAccess($this->request->getPathVariable('id'), $this->session) === true) {
             $file = $this->downloadModel->download($this->request->getPathVariable('id'));
 
             header('Content-Type: application/octet-stream');

@@ -196,9 +196,19 @@ switch (true) {
         $userModel     = new \Application\Models\User($dbConnection, $session);
         $fileModel     = new \Application\Models\File($dbConnection, $userModel, __DIR__ . '/data');
         $downloadModel = new \Application\Models\Download($dbConnection, $userModel, $fileModel, $fileFactory, __DIR__ . '/data');
-        $view          = new \Application\Views\Files\Download($request, $downloadModel, $userModel);
+        $view          = new \Application\Views\Files\Download($request, $downloadModel, $userModel, $session);
         $controller    = new \Application\Controllers\File();
         $response      = $controller->download($view);
+        break;
+
+    case $requestMatcher->doesMatch($routes['download/password/verify']['requirements']):
+        $request->setPathVariables($routes['download/password/verify']['mapping']);
+
+        $userModel     = new \Application\Models\User($dbConnection, $session);
+        $fileModel     = new \Application\Models\File($dbConnection, $userModel, __DIR__ . '/data');
+        $view          = new \Application\Views\Files\PasswordVerify($request, $fileModel, $session);
+        $controller    = new \Application\Controllers\File();
+        $response      = $controller->verifyPassword($view);
         break;
 
     case $requestMatcher->doesMatch($routes['download/file']['requirements']):
@@ -209,7 +219,7 @@ switch (true) {
         $userModel     = new \Application\Models\User($dbConnection, $session);
         $fileModel     = new \Application\Models\File($dbConnection, $userModel, __DIR__ . '/data');
         $downloadModel = new \Application\Models\Download($dbConnection, $userModel, $fileModel, $fileFactory, __DIR__ . '/data');
-        $view          = new \Application\Views\Files\DownloadFile($request, $downloadModel, $userModel);
+        $view          = new \Application\Views\Files\DownloadFile($request, $downloadModel, $userModel, $session);
         $controller    = new \Application\Controllers\File();
         $response      = $controller->downloadFile($view);
         break;

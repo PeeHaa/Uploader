@@ -17,7 +17,8 @@ namespace Application\Views\Files;
 use Application\Views\BaseView,
     RichUploader\Http\RequestData,
     Application\Models\Download as DownloadModel,
-    Application\Models\User;
+    Application\Models\User,
+    RichUploader\Storage\SessionInterface;
 
 /**
  * Download file view
@@ -45,6 +46,11 @@ class Download extends BaseView
     private $userModel;
 
     /**
+     * @var \RichUploader\Storage\SessionInterface The session
+     */
+    private $session;
+
+    /**
      * @var array The info of the downloaded
      */
     private $downloadInfo = null;
@@ -57,25 +63,40 @@ class Download extends BaseView
     /**
      * Creates instance Application\Models\Download
      *
-     * @param \RichUploader\Http\RequestData $request       The request
-     * @param \Application\Models\Download   $downloadModel The download model
-     * @param \Application\Models\User       $userModel     The user model
+     * @param \RichUploader\Http\RequestData         $request       The request
+     * @param \Application\Models\Download           $downloadModel The download model
+     * @param \Application\Models\User               $userModel     The user model
+     * @param \RichUploader\Storage\SessionInterface $session       The session
      */
-    public function __construct(RequestData $request, DownloadModel $downloadModel, User $userModel)
+    public function __construct(RequestData $request, DownloadModel $downloadModel, User $userModel, SessionInterface $session)
     {
         $this->request       = $request;
         $this->downloadModel = $downloadModel;
         $this->userModel     = $userModel;
+        $this->session       = $session;
     }
 
     /**
      * Renders the template
+     *
+     * @todo The file access lists needs its own class which uses the session storage
      *
      * @return string The rendered HTML
      */
     public function render()
     {
         $this->downloadInfo = $this->downloadModel->getFileForDownload($this->request->getPathVariable('id'));
+
+        if ($this->downloadInfo['file']['userid'] == $this->userModel->getLoggedInUserId()) {
+            $this->downloadInfo['action'] = null;
+        }
+
+        if ($this->session->isKeyValid('fileAccessList')) {
+            $fileAccessList = $this->session->get('fileAccessList');
+            if (array_key_exists($this->request->getPathVariable('id'), $fileAccessList)) {
+                $this->downloadInfo['action'] = null;
+            }
+        }
 
         switch ($this->downloadInfo['action']) {
             case 'needs-login':

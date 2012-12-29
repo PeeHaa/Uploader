@@ -251,11 +251,13 @@ class File
      * @param int $uploadId The id of the file
      * @param string The user supplied password to verify
      *
-     * @return boolean Whether the supplied password is valid
+     * @return false|array False if the supplied password is incorrect or otherwise a recordset of the file
      */
     public function verifyPassword($uploadId, $password)
     {
-        $stmt = $this->dbConnection->prepare('SELECT password FROM uploads WHERE uploadid = :uploadid');
+        $query = 'SELECT uploads.uploadid, uploads.name, uploads.password FROM uploads WHERE uploadid = :uploadid';
+
+        $stmt = $this->dbConnection->prepare($query);
         $stmt->execute([
             'uploadid' => $uploadId,
         ]);
@@ -268,7 +270,7 @@ class File
 
         $this->reHashWhenNeeded($uploadId, $password, $recordset['password']);
 
-        return true;
+        return $recordset;
     }
 
     /**

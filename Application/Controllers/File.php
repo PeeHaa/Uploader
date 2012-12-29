@@ -21,7 +21,8 @@ use Application\Views\Files\Overview,
     RichUploader\Security\CsrfToken,
     Application\Views\Files\Delete,
     Application\Views\Files\Download,
-    Application\Views\Files\DownloadFile;
+    Application\Views\Files\DownloadFile,
+    Application\Views\Files\PasswordVerify;
 
 /**
  * User controller
@@ -109,6 +110,18 @@ class File
      * @return string The rendered view
      */
     public function downloadFile(DownloadFile $view)
+    {
+        return $view;
+    }
+
+    /**
+     * Gets the result of the password verification of the download
+     *
+     * @param \Application\Views\Files\PasswordVerify $view The result of the password verification
+     *
+     * @return string The rendered view
+     */
+    public function verifyPassword(PasswordVerify $view)
     {
         return $view;
     }
