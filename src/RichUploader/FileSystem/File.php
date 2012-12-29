@@ -198,7 +198,7 @@ class File
      */
     private function createDirectory($path)
     {
-        if (!mkdir($path, 0666)) {
+        if (!mkdir($path, 0760)) {
             throw new \DomainException('Directory (`' . $path . '`) could not be created.');
         }
     }
