@@ -108,7 +108,6 @@ $routes = [
     'user/uploads/file/delete' => [
         'requirements' => [
             'path' => '#^(/your-files/(\d+)/delete/(.*)(/json)?/?)$#',
-            'method' => 'post',
             'permissions' => [
                 'minimum' => 'user',
             ],

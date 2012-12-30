@@ -81,6 +81,15 @@ class Delete extends BaseView
      */
     public function render()
     {
+        $this->templateVariables['result'] = false;
+        if ($this->csrfToken->validate($this->request->getPathVariable('csrf-token')) && $this->fileModel->deleteByid($this->request->getPathVariable('id'), $this->fileFactory)) {
+            $this->templateVariables['result'] = true;
+        }
+
+        if ($this->request->getPathVariable('json', false) === false) {
+            header('Location: /your-files');
+        }
+
         return $this->renderTemplate('file/delete.pjson');
     }
 
@@ -89,9 +98,5 @@ class Delete extends BaseView
      */
     protected function setTemplateVariables()
     {
-        $this->templateVariables['result'] = false;
-        if ($this->csrfToken->validate($this->request->getPathVariable('csrf-token')) && $this->fileModel->deleteByid($this->request->getPathVariable('id'), $this->fileFactory)) {
-            $this->templateVariables['result'] = true;
-        }
     }
 }
