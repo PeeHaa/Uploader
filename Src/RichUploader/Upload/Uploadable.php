@@ -23,6 +23,15 @@ namespace RichUploader\Upload;
 interface Uploadable
 {
     /**
+     * Saves the file to the specified path
+     *
+     * @param path The path to save the file to
+     *
+     * @return boolean true on success
+     */
+    public function save($path);
+
+    /**
      * Gets the name of the file
      *
      * @return string The name of the file
