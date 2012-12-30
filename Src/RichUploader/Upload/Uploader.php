@@ -78,9 +78,6 @@ class Uploader
 
     /**
      * Checks whether the server settings are sufficient
-     *
-     * @param array $allowedExtensions List of blocked extensions
-     * @param int   $sizeLimit         Maximum size of upload (default is 512MB)
      */
     private function validateServerSettings()
     {
@@ -93,6 +90,13 @@ class Uploader
         }
     }
 
+    /**
+     * Converts human readable byte sizes to bytes
+     *
+     * @param str $str The human readable byte size
+     *
+     * @return string The size in bytes
+     */
     private function toBytes($str){
         $val = trim($str);
         $last = strtolower($str[strlen($str)-1]);
@@ -104,12 +108,22 @@ class Uploader
         return $val;
     }
 
+    /**
+     * Gets the name of the uploaded file
+     *
+     * @return null|string The name of the upload when set or null otherwise
+     */
     public function getUploadName(){
         if (isset($this->uploadName)) {
             return $this->uploadName;
         }
     }
 
+    /**
+     * Gets the actual filename of the uploaded file
+     *
+     * @return null|string The name of the upload when set or null otherwise
+     */
     public function getName(){
         if ($this->uploadHandler) {
             return $this->file->getName();
@@ -117,7 +131,12 @@ class Uploader
     }
 
     /**
-     * Returns array('success'=>true) or array('error'=>'error message')
+     * Processes the upload if the file to the server
+     *
+     * @param string  $uploadDirectory The full path to the directory to which to save the upload
+     * @param boolean $replaceOldFile  Whether the old file can replaced if it is the same file
+     *
+     * @return array array('success'=>true) or array('error'=>'error message')
      */
     function handleUpload($uploadDirectory, $replaceOldFile = true){
         if (!is_writable($uploadDirectory)){
@@ -140,8 +159,8 @@ class Uploader
 
         $pathinfo = pathinfo($this->uploadHandler->getName());
         $filename = $pathinfo['filename'];
-        //$filename = md5(uniqid());
-        $ext = @$pathinfo['extension']; // hide notices if extension is empty
+
+        $ext = @$pathinfo['extension'];
 
         if($this->blockedExtensions && in_array(strtolower($ext), $this->blockedExtensions)){
             $these = implode(', ', $this->blockedExtensions);
