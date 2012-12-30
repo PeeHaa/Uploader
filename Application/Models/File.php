@@ -162,7 +162,7 @@ class File
         $result = true;
         if (count($recordset) == 1) {
             $fileInfo = new \SplFileInfo($recordset[0]['filename']);
-            $file = $fileFactory->build($this->getFullPath($recordset[0]['filename'], $recordset[0]['checksum']));
+            $file = $fileFactory->build($this->getFullPath($recordset[0]['checksum'], $recordset[0]['filename']));
 
             $result = $file->delete();
         }
