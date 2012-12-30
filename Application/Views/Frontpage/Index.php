@@ -83,6 +83,7 @@ class Index extends BaseView
      */
     protected function setTemplateVariables()
     {
+        $this->templateVariables['title']          = 'Upload';
         $this->templateVariables['isUserLoggedIn'] = $this->userModel->isLoggedIn();
         $this->templateVariables['csrfToken']      = $this->csrfToken->getToken();
     }
