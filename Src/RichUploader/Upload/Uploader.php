@@ -14,6 +14,7 @@
 namespace RichUploader\Upload;
 
 use RichUploader\Upload\Xhr,
+    RichUploader\Upload\Form,
     RichUploader\Http\Request;
 
 /**
@@ -64,13 +65,10 @@ class Uploader
 
         $this->validateServerSettings();
 
-        $this->uploadHandler = new Xhr($this->request->getPathVariable('filename'), 'qqfile');
-        return;
-
-        if (isset($_GET['qqfile'])) {
-            $this->uploadHandler = new qqUploadedFileXhr($filename, 'qqfile');
+        if ($this->request->getPathVariable('filename', false) !== false) {
+            $this->uploadHandler = new Xhr($this->request->getPathVariable('filename'), 'qqfile');
         } elseif (isset($_FILES['qqfile'])) {
-            $this->uploadHandler = new qqUploadedFileForm();
+            $this->uploadHandler = new Form($_FILES['qqfile']['name'], 'qqfile');
         } else {
             $this->uploadHandler = false;
         }
