@@ -9,6 +9,10 @@ Authentication.prototype.showPopup = function(popup, loginButton) {
         return;
     }
 
+    if (popup.isActive()) {
+        popup.remove();
+    }
+
     var xhr = new CustomXMLHttpRequest();
     xhr.onreadystatechange = function() {
         if (xhr.readyState < 4 || xhr.status !== 200) {
