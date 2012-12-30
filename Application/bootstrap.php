@@ -242,6 +242,14 @@ switch (true) {
         $response      = $controller->about($view);
         break;
 
+    case $requestMatcher->doesMatch($routes['pages/tos']['requirements']):
+        $request->setPathVariables($routes['pages/tos']['mapping']);
+
+        $view          = new \Application\Views\Pages\Tos($request);
+        $controller    = new \Application\Controllers\Page();
+        $response      = $controller->tos($view);
+        break;
+
     default:
         // 404
         break;

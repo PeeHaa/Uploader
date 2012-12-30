@@ -13,7 +13,8 @@
  */
 namespace Application\Controllers;
 
-use Application\Views\Pages\About;
+use Application\Views\Pages\About,
+    Application\Views\Pages\Tos;
 
 /**
  * Page controller
@@ -32,6 +33,18 @@ class Page
      * @return string The rendered view
      */
     public function about(About $view)
+    {
+        return $view;
+    }
+
+    /**
+     * Renders the terms of service page
+     *
+     * @param \Application\Views\Pages\Tos $view The about view
+     *
+     * @return string The rendered view
+     */
+    public function tos(Tos $view)
     {
         return $view;
     }

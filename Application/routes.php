@@ -172,4 +172,13 @@ $routes = [
             'json' => 1,
         ],
     ],
+    'pages/tos' => [
+        'requirements' => [
+            'path' => '#^(/terms-of-service(/json)?/?)$#',
+            'method' => 'get',
+        ],
+        'mapping' => [
+            'json' => 1,
+        ],
+    ],
 ];
