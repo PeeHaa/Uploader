@@ -93,7 +93,7 @@ FileUploader.prototype.addOnClickListeners = function() {
         }
 
         // handle footer menu clicks
-        if ($(footer).containsOrIs(target) && target.tagName == 'A') {
+        if ($(footer).containsOrIs(target) && target.tagName == 'A' && target.getAttribute('target') != '_blank') {
             this.pages.load(target.href);
 
             e.preventDefault();
