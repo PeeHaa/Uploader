@@ -54,7 +54,7 @@ $routes = [
     ],
     'upload' => [
         'requirements' => [
-            'path' => '#^(/upload/.*/?)$#',
+            'path' => '#^(/upload(/.*)?/?)$#',
             'method' => 'post',
             'permissions' => [
                 'minimum' => 'user',
