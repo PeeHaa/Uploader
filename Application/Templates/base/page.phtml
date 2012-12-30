@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>FileUpload</title>
+    <title><?php if (!empty($this->templateVariables['title'])) echo $this->templateVariables['title'] . ' - '; ?>FileUpload</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <?php if (isset($this->templateVariables['download'])) { ?>
     <META http-equiv="refresh" content="0;URL=/download-file/<?php echo $this->templateVariables['download']; ?>">
