@@ -181,4 +181,13 @@ $routes = [
             'json' => 1,
         ],
     ],
+    'pages/privacy' => [
+        'requirements' => [
+            'path' => '#^(/privacy(/json)?/?)$#',
+            'method' => 'get',
+        ],
+        'mapping' => [
+            'json' => 1,
+        ],
+    ],
 ];

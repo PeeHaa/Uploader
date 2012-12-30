@@ -250,6 +250,14 @@ switch (true) {
         $response      = $controller->tos($view);
         break;
 
+    case $requestMatcher->doesMatch($routes['pages/privacy']['requirements']):
+        $request->setPathVariables($routes['pages/privacy']['mapping']);
+
+        $view          = new \Application\Views\Pages\Privacy($request);
+        $controller    = new \Application\Controllers\Page();
+        $response      = $controller->privacy($view);
+        break;
+
     default:
         // 404
         break;

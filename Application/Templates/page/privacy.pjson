@@ -1,0 +1,8 @@
+<?php
+
+$result = [
+    'title' => $this->templateVariables['title'],
+    'html'  => $this->renderTemplate('page/privacy.phtml'),
+];
+
+echo json_encode($result);

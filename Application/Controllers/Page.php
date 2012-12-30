@@ -14,7 +14,8 @@
 namespace Application\Controllers;
 
 use Application\Views\Pages\About,
-    Application\Views\Pages\Tos;
+    Application\Views\Pages\Tos,
+    Application\Views\Pages\Privacy;
 
 /**
  * Page controller
@@ -40,11 +41,23 @@ class Page
     /**
      * Renders the terms of service page
      *
-     * @param \Application\Views\Pages\Tos $view The about view
+     * @param \Application\Views\Pages\Tos $view The terms of service view
      *
      * @return string The rendered view
      */
     public function tos(Tos $view)
+    {
+        return $view;
+    }
+
+    /**
+     * Renders the privacy page
+     *
+     * @param \Application\Views\Pages\Privacy $view The privacy view
+     *
+     * @return string The rendered view
+     */
+    public function privacy(Privacy $view)
     {
         return $view;
     }
