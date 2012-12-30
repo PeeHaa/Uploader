@@ -237,7 +237,8 @@ switch (true) {
     case $requestMatcher->doesMatch($routes['pages/about']['requirements']):
         $request->setPathVariables($routes['pages/about']['mapping']);
 
-        $view          = new \Application\Views\Pages\About($request);
+        $userModel     = new \Application\Models\User($dbConnection, $session);
+        $view          = new \Application\Views\Pages\About($request, $userModel);
         $controller    = new \Application\Controllers\Page();
         $response      = $controller->about($view);
         break;
@@ -245,7 +246,8 @@ switch (true) {
     case $requestMatcher->doesMatch($routes['pages/tos']['requirements']):
         $request->setPathVariables($routes['pages/tos']['mapping']);
 
-        $view          = new \Application\Views\Pages\Tos($request);
+        $userModel     = new \Application\Models\User($dbConnection, $session);
+        $view          = new \Application\Views\Pages\Tos($request, $userModel);
         $controller    = new \Application\Controllers\Page();
         $response      = $controller->tos($view);
         break;
@@ -253,7 +255,8 @@ switch (true) {
     case $requestMatcher->doesMatch($routes['pages/privacy']['requirements']):
         $request->setPathVariables($routes['pages/privacy']['mapping']);
 
-        $view          = new \Application\Views\Pages\Privacy($request);
+        $userModel     = new \Application\Models\User($dbConnection, $session);
+        $view          = new \Application\Views\Pages\Privacy($request, $userModel);
         $controller    = new \Application\Controllers\Page();
         $response      = $controller->privacy($view);
         break;

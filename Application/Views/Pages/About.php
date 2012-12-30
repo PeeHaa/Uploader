@@ -15,7 +15,8 @@
 namespace Application\Views\Pages;
 
 use Application\Views\BaseView,
-    RichUploader\Http\RequestData;
+    RichUploader\Http\RequestData,
+    Application\Models\User;
 
 /**
  * About page view
@@ -33,13 +34,20 @@ class About extends BaseView
     private $request;
 
     /**
+     * @var \Application\Models\User The user model
+     */
+    private $userModel;
+
+    /**
      * Creates instance
      *
-     * @param \RichUploader\Http\RequestData $request The request
+     * @param \RichUploader\Http\RequestData $request   The request
+     * @param \Application\Models\User       $userModel The user model
      */
-    public function __construct(RequestData $request)
+    public function __construct(RequestData $request, User $userModel)
     {
-        $this->request = $request;
+        $this->request   = $request;
+        $this->userModel = $userModel;
     }
 
     /**
@@ -61,6 +69,7 @@ class About extends BaseView
      */
     protected function setTemplateVariables()
     {
-        $this->templateVariables['title'] = 'About';
+        $this->templateVariables['isUserLoggedIn'] = $this->userModel->isLoggedIn();
+        $this->templateVariables['title']          = 'About';
     }
 }
