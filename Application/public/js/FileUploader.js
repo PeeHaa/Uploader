@@ -83,7 +83,7 @@ FileUploader.prototype.addOnClickListeners = function() {
             }
 
             if ($(target.parentNode).hasClass('delete')) {
-                this.filesOverview.deleteFile(target.href);
+                this.filesOverview.deleteFile(target);
 
                 e.preventDefault();
                 e.stopPropagation();

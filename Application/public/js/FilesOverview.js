@@ -108,7 +108,7 @@ FilesOverview.prototype.updateView = function(form) {
     row.querySelector('.access').innerText = access;
 };
 
-FilesOverview.prototype.deleteFile = function(url) {
+FilesOverview.prototype.deleteFile = function(target) {
     var xhr = new CustomXMLHttpRequest();
     xhr.onreadystatechange = function() {
         if (xhr.readyState < 4 || xhr.status !== 200) {
@@ -129,6 +129,6 @@ FilesOverview.prototype.deleteFile = function(url) {
         }
     }.bind(this);
 
-    xhr.open('POST', url + '/json', true);
+    xhr.open('POST', target.href + '/json', true);
     xhr.send();
 };
