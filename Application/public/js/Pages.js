@@ -16,6 +16,7 @@ Pages.prototype.load = function(url) {
         if (xhr.readyState === 4) {
             var jsonResponse = JSON.parse(xhr.responseText);
 
+            this.popup.setDimensions({width: 960});
             this.popup.show('page', jsonResponse.html);
         }
     }.bind(this);

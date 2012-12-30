@@ -2,6 +2,9 @@ function Popup() {
     this.activeType = null;
     this.allowClosing = true;
 
+    this.dimensions = {};
+    this.resetDimensions();
+
     this.init();
 }
 
@@ -24,6 +27,23 @@ Popup.prototype.isActive = function(type) {
     return true;
 };
 
+Popup.prototype.setDimensions = function(dimensions) {
+    if (typeof dimensions.width !== 'undefined') {
+        this.dimensions.width = dimensions.width;
+    }
+
+    if (typeof dimensions.height !== 'undefined') {
+        this.dimensions.height = dimensions.height;
+    }
+};
+
+Popup.prototype.resetDimensions = function() {
+    this.dimensions = {
+        width: null,
+        height: null
+    };
+};
+
 Popup.prototype.show = function(type, content, allowClosing) {
     this.activeType = type;
     if (typeof allowClosing !== 'undefined') {
@@ -37,11 +57,24 @@ Popup.prototype.show = function(type, content, allowClosing) {
     $(popup).addClass('popup');
 
     popup.innerHTML = content;
+    this.setDimensionsOfPopup(popup);
     body.appendChild(popup);
 
     $(popup).center();
 
     return popup;
+};
+
+Popup.prototype.setDimensionsOfPopup = function(popup) {
+    if (this.dimensions.width !== null) {
+        popup.style.width = this.dimensions.width + 'px';
+    }
+
+    if (this.dimensions.height !== null) {
+        popup.style.height = this.dimensions.height + 'px';
+    }
+
+    this.resetDimensions();
 };
 
 Popup.prototype.remove = function(force) {
