@@ -34,6 +34,9 @@ class Xhr implements Uploadable
      */
     private $inputName;
 
+    /**
+     * @var string The filename of the uploaded file
+     */
     private $filename;
 
     /**
