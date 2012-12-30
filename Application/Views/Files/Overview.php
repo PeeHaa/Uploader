@@ -89,5 +89,6 @@ class Overview extends BaseView
         $this->templateVariables['isUserLoggedIn'] = $this->userModel->isLoggedIn();
         $this->templateVariables['files']          = $this->fileModel->getFilesOfCurrentUser();
         $this->templateVariables['csrfToken']      = $this->csrfToken->getToken();
+        $this->templateVariables['menu']           = 'overview';
     }
 }

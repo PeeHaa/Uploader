@@ -1,6 +1,16 @@
+<?php
+$active = 'home';
+if (isset($this->templateVariables['menu'])) {
+    switch ($this->templateVariables['menu']) {
+        case 'overview':
+            $active = 'overview';
+            break;
+    }
+}
+?>
 <ul class="btn-group">
-  <li class="btn active" title="Upload"><a href="/"><i class="icon-black icon-arrow-up"></i></a></li>
-  <li class="btn" title="Your files"><a href="/your-files"><i class="icon-black icon-list-alt"></i></a></li>
+  <li class="btn<?php if ($active == 'home') { echo ' active'; } ?>" title="Upload"><a href="/"><i class="icon-black icon-arrow-up"></i></a></li>
+  <li class="btn<?php if ($active == 'overview') { echo ' active'; } ?>" title="Your files"><a href="/your-files"><i class="icon-black icon-list-alt"></i></a></li>
   <li class="btn" title="Your settings"><a href="/login-popup"><i class="icon-black icon-wrench"></i></a></li>
   <li class="btn logout" title="Logoff"><a href="/logout/<?php echo $this->templateVariables['csrfToken']; ?>"><i class="icon-black icon-off"></i></a></li>
 </ul>
