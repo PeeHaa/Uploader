@@ -50,8 +50,9 @@ class User
     /**
      * Validates the user supplied credentials. If the login is successful it will handle the session regeneration.
      *
-     * @param string $username The username to check
-     * @param string $password The password to check
+     * @param string                           $username  The username to check
+     * @param string                           $password  The password to check
+     * @param \RichUploader\Security\CsrfToken $csrfToken The csrf token instance
      *
      * @return boolean Whether the login was successful
      */

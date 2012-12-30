@@ -1,0 +1,11 @@
+<h2 class="download">Login required</h2>
+<p class="download">This is a private resource. Please login.</p>
+<div class="popup" style="display: none;">
+  <form action="/download/verify/<?php echo $this->templateVariables['file']['uploadid']; ?>/login" method="post" class="private-login">
+    <input type="hidden" name="csrf-token" value="LODN3TgqdSx9EFcvC5qq2EZwfW6g7FtVlN0YwPhpUAynxDCKD1DAGIEqbuwniQxHuoBW965XCirVMkM7b1Fd9xkeqLoYOmG3mRBH5XVHbgjHORPuuhrdk3SvInWEg">
+    <p>This is a private resource. If you are the owner of it please login.</p>
+    <input type="text" name="username" placeholder="Username">
+    <input type="password" name="password" placeholder="Password">
+    <input type="submit" name="submit" value="Download" class="btn">
+  </form>
+</div>

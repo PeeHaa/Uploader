@@ -22,7 +22,8 @@ use Application\Views\Files\Overview,
     Application\Views\Files\Delete,
     Application\Views\Files\Download,
     Application\Views\Files\DownloadFile,
-    Application\Views\Files\PasswordVerify;
+    Application\Views\Files\PasswordVerify,
+    Application\Views\Files\LoginVerify;
 
 /**
  * User controller
@@ -122,6 +123,18 @@ class File
      * @return string The rendered view
      */
     public function verifyPassword(PasswordVerify $view)
+    {
+        return $view;
+    }
+
+    /**
+     * Gets the result of the login verification of the download
+     *
+     * @param \Application\Views\Files\LoginVerify $view The result of the login verification
+     *
+     * @return string The rendered view
+     */
+    public function verifyLogin(LoginVerify $view)
     {
         return $view;
     }

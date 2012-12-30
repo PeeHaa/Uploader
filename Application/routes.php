@@ -134,9 +134,19 @@ $routes = [
             'id' => 1,
         ],
     ],
-    'download/password/verify' => [
+    'download/password/verify/password' => [
         'requirements' => [
             'path' => '#^(/download/verify/(\d+)(/password)(/json)?/?)$#',
+            'method' => 'post',
+        ],
+        'mapping' => [
+            'id' => 2,
+            'json' => 4,
+        ],
+    ],
+    'download/password/verify/login' => [
+        'requirements' => [
+            'path' => '#^(/download/verify/(\d+)(/login)(/json)?/?)$#',
             'method' => 'post',
         ],
         'mapping' => [

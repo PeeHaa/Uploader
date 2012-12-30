@@ -122,6 +122,16 @@ FileUploader.prototype.addOnSubmitListeners = function() {
             return;
         }
 
+        // handle password protected file
+        if ($(target).hasClass('private-login')) {
+            this.download.login(target);
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            return;
+        }
+
     }.bind(this));
 };
 

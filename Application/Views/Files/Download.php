@@ -100,6 +100,11 @@ class Download extends BaseView
 
         switch ($this->downloadInfo['action']) {
             case 'needs-login':
+                if ($this->request->getPathVariable('json', false) === false) {
+                    return $this->renderPage('file/download-requires-login.phtml');
+                }
+
+                return $this->renderTemplate('file/download-requires-login.pjson');
                 break;
 
             case 'access-denied':

@@ -201,14 +201,24 @@ switch (true) {
         $response      = $controller->download($view);
         break;
 
-    case $requestMatcher->doesMatch($routes['download/password/verify']['requirements']):
-        $request->setPathVariables($routes['download/password/verify']['mapping']);
+    case $requestMatcher->doesMatch($routes['download/password/verify/password']['requirements']):
+        $request->setPathVariables($routes['download/password/verify/password']['mapping']);
 
         $userModel     = new \Application\Models\User($dbConnection, $session);
         $fileModel     = new \Application\Models\File($dbConnection, $userModel, __DIR__ . '/data');
         $view          = new \Application\Views\Files\PasswordVerify($request, $fileModel, $session);
         $controller    = new \Application\Controllers\File();
         $response      = $controller->verifyPassword($view);
+        break;
+
+    case $requestMatcher->doesMatch($routes['download/password/verify/login']['requirements']):
+        $request->setPathVariables($routes['download/password/verify/login']['mapping']);
+
+        $userModel     = new \Application\Models\User($dbConnection, $session);
+        $fileModel     = new \Application\Models\File($dbConnection, $userModel, __DIR__ . '/data');
+        $view          = new \Application\Views\Files\LoginVerify($request, $fileModel, $userModel, $csrfToken);
+        $controller    = new \Application\Controllers\File();
+        $response      = $controller->verifyLogin($view);
         break;
 
     case $requestMatcher->doesMatch($routes['download/file']['requirements']):
