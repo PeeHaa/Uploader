@@ -234,6 +234,14 @@ switch (true) {
         $response      = $controller->downloadFile($view);
         break;
 
+    case $requestMatcher->doesMatch($routes['pages/about']['requirements']):
+        $request->setPathVariables($routes['pages/about']['mapping']);
+
+        $view          = new \Application\Views\Pages\About($request);
+        $controller    = new \Application\Controllers\Page();
+        $response      = $controller->about($view);
+        break;
+
     default:
         // 404
         break;

@@ -156,11 +156,20 @@ $routes = [
     ],
     'download/file' => [
         'requirements' => [
-            'path' => '#^(/download-file/(\d+))$#',
+            'path' => '#^(/download-file/(\d+)/?)$#',
             'method' => 'get',
         ],
         'mapping' => [
             'id' => 1,
+        ],
+    ],
+    'pages/about' => [
+        'requirements' => [
+            'path' => '#^(/about(/json)?/?)$#',
+            'method' => 'get',
+        ],
+        'mapping' => [
+            'json' => 1,
         ],
     ],
 ];

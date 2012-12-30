@@ -7,6 +7,7 @@ function FileUploader() {
     this.fixHeight      = new FixHeight();
     this.menu           = new Menu();
     this.page           = new Page(this);
+    this.pages          = new Pages(this.popup);
     this.filesOverview  = new FilesOverview(this.page);
 
     this.initializeEventListeners();
@@ -38,7 +39,8 @@ FileUploader.prototype.addOnClickListeners = function() {
             header      = document.getElementById('header'),
             loginButton = header.querySelector('a.login'),
             topMenu     = header.querySelector('ul.btn-group'),
-            fileList    = document.querySelector('table.file-list');
+            fileList    = document.querySelector('table.file-list'),
+            footer      = document.getElementsByTagName('footer')[0];
 
         // handle login
         if (false || loginButton !== null && $(loginButton).containsOrIs(target)) {
@@ -88,6 +90,16 @@ FileUploader.prototype.addOnClickListeners = function() {
 
                 return;
             }
+        }
+
+        // handle footer menu clicks
+        if ($(footer).containsOrIs(target) && target.tagName == 'A') {
+            this.pages.load(target.href);
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            return;
         }
 
         // remove popup when clicked on document somewhere
