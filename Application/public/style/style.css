@@ -341,6 +341,11 @@ input[disabled="disabled"] {
     color: #cccccc;
 }
 
+#body > form.login {
+    margin: 200px auto 0;
+    width: 415px;
+}
+
 table.file-list, table.file-info {
     background: white;
     margin-top: 50px;

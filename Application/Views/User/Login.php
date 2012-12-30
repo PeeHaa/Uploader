@@ -16,7 +16,8 @@ namespace Application\Views\User;
 
 use Application\Views\BaseView,
     Application\Models\User,
-    RichUploader\Security\CsrfToken;
+    RichUploader\Security\CsrfToken,
+    RichUploader\Http\RequestData;
 
 /**
  * Login view
@@ -39,6 +40,11 @@ class Login extends BaseView
     private $csrfToken;
 
     /**
+     * @var \RichUploader\Http\RequestData The request
+     */
+    private $request;
+
+    /**
      * @var string The supplied username
      */
     private $username;
@@ -59,10 +65,11 @@ class Login extends BaseView
      * @param \Application\Models\User           $userModel The user model
      * @param \RichUploader\Security\CsrfToken   $csrfToken The CSRF token
      */
-    public function __construct(User $userModel, CsrfToken $csrfToken)
+    public function __construct(User $userModel, CsrfToken $csrfToken, RequestData $request)
     {
         $this->userModel = $userModel;
         $this->csrfToken = $csrfToken;
+        $this->request   = $request;
     }
 
     /**
@@ -102,7 +109,19 @@ class Login extends BaseView
      */
     public function render()
     {
-        return $this->renderTemplate('user/login.phtml');
+        $this->templateVariables['result']         = ($this->csrfToken->validate($this->token)
+            && $this->userModel->login($this->username, $this->password, $this->csrfToken));
+
+        if ($this->request->getPathVariable('json', false) === false) {
+            if ($this->templateVariables['result'] === true) {
+                header('Location: /');
+                exit();
+            }
+
+            return $this->renderPage('user/login-popup.phtml');
+        }
+
+        return $this->renderTemplate('user/login.pjson');
     }
 
     /**
@@ -110,7 +129,9 @@ class Login extends BaseView
      */
     protected function setTemplateVariables()
     {
-        $this->templateVariables['result'] = ($this->csrfToken->validate($this->token)
-            && $this->userModel->login($this->username, $this->password, $this->csrfToken));
+        $this->templateVariables['title']          = 'Login';
+        $this->templateVariables['isUserLoggedIn'] = $this->userModel->isLoggedIn();
+        $this->templateVariables['csrfToken']      = $this->csrfToken->getToken();
+        $this->templateVariables['username']       = $this->username;
     }
 }

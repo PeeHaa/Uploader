@@ -15,7 +15,9 @@
 namespace Application\Views\User;
 
 use Application\Views\BaseView,
-    RichUploader\Security\CsrfToken;
+    RichUploader\Security\CsrfToken,
+    RichUploader\Http\RequestData,
+    Application\Models\User;
 
 /**
  * Login popup view
@@ -33,13 +35,27 @@ class LoginPopup extends BaseView
     private $csrfToken;
 
     /**
+     * @var \RichUploader\Http\RequestData The request
+     */
+    private $request;
+
+    /**
+     * @var \Application\Models\User The user model
+     */
+    private $userModel;
+
+    /**
      * Creates instance
      *
-     * @param \RichUploader\Security\CsrfToken   $csrfToken    The CSRF token
+     * @param \RichUploader\Security\CsrfToken $csrfToken The CSRF token
+     * @param \RichUploader\Http\RequestData   $request   The request
+     * @param \Application\Models\User         $userModel The user model
      */
-    public function __construct(CsrfToken $csrfToken)
+    public function __construct(CsrfToken $csrfToken, RequestData $request, User $userModel)
     {
         $this->csrfToken = $csrfToken;
+        $this->request   = $request;
+        $this->userModel = $userModel;
     }
 
     /**
@@ -49,7 +65,11 @@ class LoginPopup extends BaseView
      */
     public function render()
     {
-        return $this->renderTemplate('user/login-popup.phtml');
+        if ($this->request->getPathVariable('json', false) === false) {
+            return $this->renderPage('user/login-popup.phtml');
+        }
+
+        return $this->renderTemplate('user/login-popup.pjson');
     }
 
     /**
@@ -57,6 +77,8 @@ class LoginPopup extends BaseView
      */
     protected function setTemplateVariables()
     {
-        $this->templateVariables['csrfToken'] = $this->csrfToken->getToken();
+        $this->templateVariables['title']          = 'Login';
+        $this->templateVariables['isUserLoggedIn'] = $this->userModel->isLoggedIn();
+        $this->templateVariables['csrfToken']      = $this->csrfToken->getToken();
     }
 }

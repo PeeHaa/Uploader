@@ -12,16 +12,19 @@ $routes = [
     ],
     'user/login' => [
         'requirements' => [
-            'path'   => '#^(/login/?)$#',
+            'path'   => '#^(/login(/json)?/?)$#',
             'method' => 'post',
             'permissions' => [
                 'match' => 'guest',
             ],
         ],
+        'mapping' => [
+            'json' => 1,
+        ],
     ],
     'user/login/popup' => [
         'requirements' => [
-            'path'   => '#^(/login-popup/?)(/json)?$#',
+            'path'   => '#^(/login(/json)?/?)$#',
             'method' => 'get',
             'permissions' => [
                 'match' => 'guest',

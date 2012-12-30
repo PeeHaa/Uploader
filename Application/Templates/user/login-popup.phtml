@@ -1,6 +1,15 @@
+<?php
+$class = '';
+$username = '';
+if (isset($this->templateVariables['result']) && $this->templateVariables['result'] === false) {
+    $class = ' class="error"';
+    $username = $this->templateVariables['username'];
+}
+?>
+
       <form action="/login" method="post" class="login">
         <input type="hidden" name="csrf-token" value="<?php echo $this->templateVariables['csrfToken']; ?>">
-        <input type="text" name="username" placeholder="Username">
-        <input type="password" name="password" placeholder="Password">
+        <input type="text" name="username" placeholder="Username" value="<?php echo $username; ?>"<?php echo $class; ?>>
+        <input type="password" name="password" placeholder="Password"<?php echo $class; ?>>
         <input type="submit" name="submit" value="Login" class="btn">
       </form>

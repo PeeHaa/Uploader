@@ -20,7 +20,8 @@ Authentication.prototype.showPopup = function(popup, loginButton) {
         }
 
         if (xhr.readyState === 4) {
-            var popupElement = popup.show('login', xhr.responseText);
+            var response = JSON.parse(xhr.responseText);
+            var popupElement = popup.show('login', response.html);
             popupElement.querySelector('input[name="username"]').focus();
         }
     };
@@ -53,7 +54,7 @@ Authentication.prototype.login = function(form) {
         }
     }.bind(this);
 
-    xhr.open(form.method, form.action, true);
+    xhr.open(form.method, form.action + '/json', true);
     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xhr.send(formValues.buildQueryString());
 };

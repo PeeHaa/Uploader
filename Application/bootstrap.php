@@ -76,14 +76,19 @@ $requestMatcher = new RequestMatcher($requestMatcherFactory);
 
 switch (true) {
     case $requestMatcher->doesMatch($routes['user/login']['requirements']):
-        $model      = new \Application\Models\User($dbConnection, $session);
-        $view       = new \Application\Views\User\Login($model, $csrfToken);
+        $request->setPathVariables($routes['user/login/popup']['mapping']);
+
+        $userModel  = new \Application\Models\User($dbConnection, $session);
+        $view       = new \Application\Views\User\Login($userModel, $csrfToken, $request);
         $controller = new \Application\Controllers\User();
         $response   = $controller->login($view, $request);
         break;
 
     case $requestMatcher->doesMatch($routes['user/login/popup']['requirements']):
-        $view       = new \Application\Views\User\LoginPopup($csrfToken);
+        $request->setPathVariables($routes['user/login/popup']['mapping']);
+
+        $userModel  = new \Application\Models\User($dbConnection, $session);
+        $view       = new \Application\Views\User\LoginPopup($csrfToken, $request, $userModel);
         $controller = new \Application\Controllers\User();
         $response   = $controller->loginPopup($view);
         break;
