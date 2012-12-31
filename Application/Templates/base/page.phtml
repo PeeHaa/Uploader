@@ -7,7 +7,11 @@
     <META http-equiv="refresh" content="0;URL=/download-file/<?php echo $this->templateVariables['download']; ?>">
     <?php } ?>
     <link href='http://fonts.googleapis.com/css?family=Oleo+Script:700' rel='stylesheet' type='text/css'>
+    <?php if (defined('RICHUPLOADER_DEBUG')) { ?>
     <link href="/style/style.css" rel="stylesheet" type="text/css">
+    <?php } else { ?>
+    <link href="/style/style-min.css" rel="stylesheet" type="text/css">
+    <?php } ?>
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
     <link rel="apple-touch-icon-precomposed" href="apple-touch-iphone.png">
     <script>
@@ -45,6 +49,7 @@
         </ul>
       </footer>
     </div>
+    <?php if (defined('RICHUPLOADER_DEBUG')) { ?>
     <script src="/js/XMLHttpRequest.js"></script>
     <script src="/js/qqfileuploader.js"></script>
     <script src="/js/DomHandler.js"></script>
@@ -59,5 +64,8 @@
     <script src="/js/Pages.js"></script>
     <script src="/js/FileUploader.js"></script>
     <script src="/js/site.js"></script>
+    <?php } else { ?>
+    <script src="/js/site-min.js"></script>
+    <?php } ?>
 </body>
 </html>
