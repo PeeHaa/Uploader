@@ -8,6 +8,11 @@ Status of the project
 
 Currently the project is working towards the first public beta. To follow its progress it is best to check out the issue tracker for [the milestone issues][milestone]. Once the milestone is released the public beta will start and there will be a feature freeze.
 
+Demo (currently invite only)
+----------------------------
+
+http://uploader.pieterhordijk.com
+
 License
 -------
 
