@@ -103,9 +103,16 @@ FilesOverview.prototype.updateView = function(form) {
 
     var row = document.querySelector('tr[data-id="' + id + '"]');
 
-    row.querySelector('.name').innerText = name;
-    row.querySelector('.description').innerText = description;
-    row.querySelector('.access').innerText = access;
+    if (row.querySelector('.name').innerText) {
+        row.querySelector('.name').innerText = name;
+        row.querySelector('.description').innerText = description;
+        row.querySelector('.access').innerText = access;
+    } else {
+        row.querySelector('.name').textContent = name;
+        row.querySelector('.description').textContent = description;
+        row.querySelector('.access').textContent = access;
+
+    }
 };
 
 FilesOverview.prototype.deleteFile = function(target) {
