@@ -268,7 +268,7 @@ switch (true) {
 
     default:
         $userModel     = new \Application\Models\User($dbConnection, $session);
-        $view          = new \Application\Views\Error\NotFound($request, $userModel);
+        $view          = new \Application\Views\Error\NotFound($request, $userModel, $csrfToken);
         $controller    = new \Application\Controllers\Error();
         $response      = $controller->notFound($view);
         break;

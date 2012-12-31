@@ -16,7 +16,8 @@ namespace Application\Views\Error;
 
 use Application\Views\BaseView,
     RichUploader\Http\RequestData,
-    Application\Models\User;
+    Application\Models\User,
+    RichUploader\Security\CsrfToken;
 
 /**
  * 404 page view
@@ -38,17 +39,23 @@ class NotFound extends BaseView
      */
     private $userModel;
 
+    /**
+     * @var \RichUploader\Security\CsrfToken The CSRF token
+     */
+    private $csrfToken;
 
     /**
      * Creates instance
      *
-     * @param \RichUploader\Http\RequestData $request   The request
-     * @param \Application\Models\User       $userModel The user model
+     * @param \RichUploader\Http\RequestData   $request   The request
+     * @param \Application\Models\User         $userModel The user model
+     * @param \RichUploader\Security\CsrfToken $csrfToken The CSRF token
      */
-    public function __construct(RequestData $request, User $userModel)
+    public function __construct(RequestData $request, User $userModel, CsrfToken $csrfToken)
     {
         $this->request   = $request;
         $this->userModel = $userModel;
+        $this->csrfToken - $csrfToken;
     }
 
     /**
@@ -68,5 +75,6 @@ class NotFound extends BaseView
     {
         $this->templateVariables['isUserLoggedIn'] = $this->userModel->isLoggedIn();
         $this->templateVariables['title']          = 'Not found';
+        $this->templateVariables['csrfToken']      = $this->csrfToken->getToken();
     }
 }
