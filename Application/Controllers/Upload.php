@@ -69,7 +69,7 @@ class Upload
 
         if (array_key_exists('success', $result) && $result['success'] === true) {
             try {
-                if ($this->request->getPathVariable('filename', false) === false && false) {
+                if ($this->request->getPathVariable('filename', false) === false) {
                     $this->uploadModel->process(sys_get_temp_dir() . DIRECTORY_SEPARATOR . $_FILES['qqfile']['name']);
                 } else {
                     $this->uploadModel->process(sys_get_temp_dir() . DIRECTORY_SEPARATOR . $this->request->getPathVariable('filename'));
