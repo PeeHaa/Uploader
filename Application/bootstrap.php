@@ -267,7 +267,10 @@ switch (true) {
         break;
 
     default:
-        // 404
+        $userModel     = new \Application\Models\User($dbConnection, $session);
+        $view          = new \Application\Views\Error\NotFound($request, $userModel);
+        $controller    = new \Application\Controllers\Error();
+        $response      = $controller->notFound($view);
         break;
 }
 
