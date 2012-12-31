@@ -14,7 +14,9 @@
  */
 namespace Application\Views\Upload;
 
-use Application\Views\BaseView;
+use Application\Views\BaseView,
+    RichUploader\Http\RequestData,
+    Application\Models\User;
 
 /**
  * Upload result view
@@ -27,9 +29,31 @@ use Application\Views\BaseView;
 class Result extends BaseView
 {
     /**
+     * @var \RichUploader\Http\RequestData The request
+     */
+    private $request;
+
+    /**
+     * @var \Application\Models\User The user model
+     */
+    private $userModel;
+
+    /**
      * @var array The result of the upload
      */
     private $result = [];
+
+    /**
+     * Creates instance
+     *
+     * @param \RichUploader\Http\RequestData $request   The request
+     * @param \Application\Models\User       $userModel The user model
+     */
+    public function __construct(RequestData $request, User $userModel)
+    {
+        $this->request   = $request;
+        $this->userModel = $userModel;
+    }
 
     /**
      * Sets the result of the upload
@@ -48,7 +72,15 @@ class Result extends BaseView
      */
     public function render()
     {
-        return $this->renderTemplate('upload/result.phtml');
+        if ($this->request->getPathVariable('filename', false) === false) {
+            if (isset($this->result['success']) && $this->result['success'] === true) {
+                header('Location: /your-files');
+                exit();
+            }
+            return $this->renderPage('upload/result.phtml');
+        }
+
+        return $this->renderTemplate('upload/result.pjson');
     }
 
     /**
@@ -57,5 +89,9 @@ class Result extends BaseView
     protected function setTemplateVariables()
     {
         $this->templateVariables['result'] = json_encode($this->result);
+        if (!isset($this->result['success']) || $this->result['success'] !== true) {
+            $this->templateVariables['error'] = json_encode($this->result['error']);
+        }
+        $this->templateVariables['isUserLoggedIn'] = $this->userModel->isLoggedIn();
     }
 }

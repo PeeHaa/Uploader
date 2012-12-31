@@ -116,7 +116,7 @@ switch (true) {
         $userModel    = new \Application\Models\User($dbConnection, $session);
         $fileFactory  = new \RichUploader\FileSystem\FileFactory();
         $uploadModel  = new \Application\Models\Upload($dbConnection, $userModel, $fileFactory, __DIR__ . '/data');
-        $view         = new \Application\Views\Upload\Result();
+        $view         = new \Application\Views\Upload\Result($request, $userModel);
         $richUploader = new Uploader($request);
         $controller   = new \Application\Controllers\Upload($richUploader, $uploadModel, $request);
         $response     = $controller->process($view);

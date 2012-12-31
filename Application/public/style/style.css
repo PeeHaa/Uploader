@@ -355,6 +355,11 @@ input[disabled="disabled"] {
     display: table-row;
 }
 
+noscript > form.upload {
+    margin: 200px auto 0;
+    width: 388px;
+}
+
 table.file-list, table.file-info {
     background: white;
     margin-top: 50px;

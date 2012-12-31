@@ -1,7 +1,9 @@
 <div id="file-upload">
   <noscript>
-    <p>Please enable JavaScript to use file uploader.</p>
-    <!-- or put a simple form for upload here -->
+    <form action="/upload" method="post" class="upload" enctype="multipart/form-data">
+      <input type="file" name="qqfile" class="btn">
+      <input type="submit" name="submit" class="btn" value="Upload">
+    </form>
   </noscript>
 </div>
 <h1>Drop to upload</h1>
