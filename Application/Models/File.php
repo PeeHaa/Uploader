@@ -225,7 +225,7 @@ class File
         $updateValues = [
             'uploadid' => $uploadId,
             'name' => $formData['name'],
-            'description' => $formData['name'],
+            'description' => $formData['description'],
             'access' => $formData['access'],
         ];
 
