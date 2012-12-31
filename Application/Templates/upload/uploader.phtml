@@ -1,3 +1,10 @@
+<!--[if IE]>
+<form action="/upload" method="post" class="upload" enctype="multipart/form-data">
+  <input type="file" name="qqfile" class="btn">
+  <input type="submit" name="submit" class="btn" value="Upload">
+</form>
+<![endif]-->
+<![if !IE]>
 <div id="file-upload">
   <noscript>
     <form action="/upload" method="post" class="upload" enctype="multipart/form-data">
@@ -6,4 +13,5 @@
     </form>
   </noscript>
 </div>
+<![endif]>
 <h1>Drop to upload</h1>

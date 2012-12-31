@@ -355,7 +355,7 @@ input[disabled="disabled"] {
     display: table-row;
 }
 
-noscript > form.upload {
+noscript > form.upload, #body > form.upload {
     margin: 200px auto 0;
     width: 388px;
 }
