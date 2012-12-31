@@ -76,13 +76,8 @@ DomHandler.prototype.center = function() {
         top: (this.getViewport().height - this.domElement.offsetHeight) / 2
     };
 
-    if (document.getBoxObjectFor) {
-        this.domElement.style.left = offset.left;
-        this.domElement.style.top = offset.top;
-    } else {
-        this.domElement.style.pixelLeft = offset.left + document.documentElement.scrollTop;
-        this.domElement.style.pixelTop = offset.top + document.documentElement.scrollLeft;
-    }
+    this.domElement.style.left = offset.left + 'px';
+    this.domElement.style.top = offset.top + 'px';
 };
 
 DomHandler.prototype.getFormValues = function() {
