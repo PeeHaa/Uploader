@@ -63,7 +63,11 @@ FileUploader.prototype.addOnClickListeners = function() {
             this.menu.deactivateAll();
             this.menu.activateItem(target);
 
-            this.filesOverview.load(hyperlink.href);
+            if ($(target.hasClass('logout'))) {
+                this.authentication.logout(hyperlink.href);
+            } else {
+                this.filesOverview.load(hyperlink.href);
+            }
 
             e.preventDefault();
             e.stopPropagation();

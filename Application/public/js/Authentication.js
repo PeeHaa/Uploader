@@ -75,3 +75,19 @@ Authentication.prototype.invalidateForm = function(form) {
     username.blur();
     password.blur();
 };
+
+Authentication.prototype.logout = function(url) {
+    var xhr = new CustomXMLHttpRequest();
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState < 4 || xhr.status !== 200) {
+            return;
+        }
+
+        if (xhr.readyState === 4) {
+            window.location = '/';
+        }
+    }.bind(this);
+
+    xhr.open('GET', url + '/json', true);
+    xhr.send();
+};
