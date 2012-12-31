@@ -15,7 +15,10 @@
 namespace Application\Views\Files;
 
 use Application\Views\BaseView,
-    RichUploader\Http\RequestData;
+    RichUploader\Http\RequestData,
+    Application\Models\User,
+    Application\Models\File,
+    RichUploader\Security\CsrfToken;
 
 /**
  * Edit file view
@@ -33,6 +36,21 @@ class Edit extends BaseView
     private $request;
 
     /**
+     * @var \Application\Models\UserModel The user model
+     */
+    private $userModel;
+
+    /**
+     * @var \Application\Models\FileModel The file model
+     */
+    private $fileModel;
+
+    /**
+     * @var \RichUploader\Security\CsrfToken The csrf token
+     */
+    private $csrfToken;
+
+    /**
      * @var array The result of the form submit
      */
     private $result = [];
@@ -41,10 +59,16 @@ class Edit extends BaseView
      * Creates instance
      *
      * @param \RichUploader\Http\RequestData   $request   The request
+     * @param \Application\Models\UserModel    $userModel The user model
+     * @param \Application\Models\FileModel    $fileModel The file model
+     * @param \RichUploader\Security\CsrfToken $csrfToken The csrf token
      */
-    public function __construct(RequestData $request)
+    public function __construct(RequestData $request, User $userModel, File $fileModel, CsrfToken $csrfToken)
     {
         $this->request   = $request;
+        $this->userModel = $userModel;
+        $this->fileModel = $fileModel;
+        $this->csrfToken = $csrfToken;
     }
 
     /**
@@ -65,7 +89,12 @@ class Edit extends BaseView
     public function render()
     {
         if ($this->request->getPathVariable('json', false) === false) {
-            return $this->renderPage('file/edit.phtml');
+            if (empty($this->result['errors'])) {
+                header('Location: /your-files');
+                exit();
+            }
+
+            return $this->renderPage('file/edit-popup.phtml');
         }
 
         return $this->renderTemplate('file/edit.pjson');
@@ -76,6 +105,13 @@ class Edit extends BaseView
      */
     protected function setTemplateVariables()
     {
-        $this->templateVariables['result'] = $this->result;
+        $fileInfo = $this->fileModel->getFileById($this->request->getPathVariable('id'));
+        $this->templateVariables['name']           = $this->request->getPostVariable('name');
+        $this->templateVariables['description']    = $this->request->getPostVariable('description');
+        $this->templateVariables['access']         = $this->request->getPostVariable('access');
+        $this->templateVariables['result']         = $this->result;
+        $this->templateVariables['csrfToken']      = $this->csrfToken->getToken();
+        $this->templateVariables['isUserLoggedIn'] = $this->userModel->isLoggedIn();
+        $this->templateVariables['fileInfo']       = $fileInfo;
     }
 }

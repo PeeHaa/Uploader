@@ -1,4 +1,26 @@
-<form action="/your-files/<?php echo $this->templateVariables['fileInfo']['uploadid']; ?>/edit" method="post">
+<?php
+$nameValue = $this->templateVariables['fileInfo']['name'];
+if (array_key_exists('name', $this->templateVariables)) {
+    $nameValue = $this->templateVariables['name'];
+}
+
+$descriptionValue = $this->templateVariables['fileInfo']['description'];
+if (array_key_exists('description', $this->templateVariables)) {
+    $descriptionValue = $this->templateVariables['description'];
+}
+
+$accessValue = $this->templateVariables['fileInfo']['access'];
+if (array_key_exists('access', $this->templateVariables)) {
+    $accessValue = $this->templateVariables['access'];
+}
+
+$errors = [];
+if (isset($this->templateVariables['result']) && !empty($this->templateVariables['result']['errors'])) {
+    $errors = array_flip($this->templateVariables['result']['errors']);
+}
+?>
+
+<form action="/your-files/<?php echo $this->templateVariables['fileInfo']['uploadid']; ?>/edit" method="post" class="file-edit">
   <input type="hidden" name="csrf-token" value="<?php echo $this->templateVariables['csrfToken']; ?>">
   <input type="hidden" name="id" value="<?php echo $this->templateVariables['fileInfo']['uploadid']; ?>">
   <table class="file-list-edit">
@@ -8,11 +30,11 @@
     </tr>
     <tr>
       <th>Name</th>
-      <td><input type="text" name="name" value="<?php echo htmlspecialchars($this->templateVariables['fileInfo']['name'], ENT_QUOTES, 'UTF-8'); ?>"></td>
+      <td><input type="text" name="name" value="<?php echo htmlspecialchars($nameValue, ENT_QUOTES, 'UTF-8'); ?>"></td>
     </tr>
     <tr>
       <th>Description</th>
-      <td><textarea name="description"><?php echo htmlspecialchars($this->templateVariables['fileInfo']['description'], ENT_QUOTES, 'UTF-8'); ?></textarea></td>
+      <td><textarea name="description"><?php echo htmlspecialchars($descriptionValue, ENT_QUOTES, 'UTF-8'); ?></textarea></td>
     </tr>
     <tr>
       <th>Access</th>
@@ -26,7 +48,7 @@
           ];
           foreach ($accesslevels as $key => $value) {
           ?>
-            <option value="<?php echo $key; ?>"<?php if ($this->templateVariables['fileInfo']['access'] == $key) { echo ' selected="selected"'; } ?>><?php echo $value; ?></option>
+            <option value="<?php echo $key; ?>"<?php if ($accessValue == $key) { echo ' selected="selected"'; } ?>><?php echo $value; ?></option>
           <?php } ?>
         </select>
       </td>
@@ -34,11 +56,11 @@
     <?php $style = ''; if ($this->templateVariables['fileInfo']['access'] == 'password') $style = ' style="display: table-row"'; ?>
     <tr class="password"<?php echo $style; ?>>
       <th>Password</th>
-      <td><input type="password" name="password" value=""></td>
+      <td><input type="password" name="password" value="" class="<?php if (isset($errors['password'])) echo 'error'; ?>"></td>
     </tr>
     <tr class="password"<?php echo $style; ?>>
       <th>Retype password</th>
-      <td><input type="password" name="password2" value=""></td>
+      <td><input type="password" name="password2" value="" class="<?php if (isset($errors['password2'])) echo 'error'; ?>"></td>
     </tr>
     <tr>
       <th>Uploaded</th>

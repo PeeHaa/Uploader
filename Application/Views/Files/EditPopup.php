@@ -86,8 +86,9 @@ class EditPopup extends BaseView
     protected function setTemplateVariables()
     {
         $fileInfo = $this->fileModel->getFileById($this->request->getPathVariable('id'));
-        $this->templateVariables['title']     = 'Edit ' . $fileInfo['filename'] . ' - Your files';
-        $this->templateVariables['csrfToken'] = $this->csrfToken->getToken();
-        $this->templateVariables['fileInfo']  = $fileInfo;
+        $this->templateVariables['title']          = 'Edit ' . basename($fileInfo['filename']) . ' - Your files';
+        $this->templateVariables['csrfToken']      = $this->csrfToken->getToken();
+        $this->templateVariables['isUserLoggedIn'] = $this->userModel->isLoggedIn();
+        $this->templateVariables['fileInfo']       = $fileInfo;
     }
 }

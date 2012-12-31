@@ -163,7 +163,7 @@ switch (true) {
 
         $userModel  = new \Application\Models\User($dbConnection, $session);
         $fileModel  = new \Application\Models\File($dbConnection, $userModel, __DIR__ . '/data');
-        $view       = new \Application\Views\Files\Edit($request);
+        $view       = new \Application\Views\Files\Edit($request, $userModel, $fileModel, $csrfToken);
         $controller = new \Application\Controllers\File();
         $response   = $controller->edit($view, $request, $fileModel, $csrfToken);
         break;

@@ -346,6 +346,15 @@ input[disabled="disabled"] {
     width: 415px;
 }
 
+#body > form.file-edit {
+    margin: 100px auto 0;
+    width: 573px;
+}
+
+#body > form.file-edit tr.password {
+    display: table-row;
+}
+
 table.file-list, table.file-info {
     background: white;
     margin-top: 50px;
